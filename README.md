@@ -7,7 +7,7 @@
 [![Check & fix styling](https://github.com/spatie/laravel-activitylog/workflows/Check%20&%20fix%20styling/badge.svg)](https://github.com/spatie/laravel-activitylog/actions/workflows/php-cs-fixer.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-historytrack.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-activitylog)
 
-The `spatie/laravel-activitylog` package provides easy to use functions to log the activities of the users of your app. It can also automatically log model events.
+A custom history tracking system for users + reporting, based on the https://github.com/spatie/laravel-activitylog package.
 The Package stores all activity in the `history_tracking` table.
 
 Here's a demo of how you can use it:
@@ -16,7 +16,7 @@ Here's a demo of how you can use it:
 activity()->log('Look, I logged something');
 ```
 
-You can retrieve all activity using the `Jobful\HistoryTracking\Models\Activity` model.
+You can retrieve all activity using the `Jobful\HistoryTracking\Models\HistoryTracking` model.
 
 ```php
 Activity::all();
@@ -94,7 +94,7 @@ The package will automatically register itself.
 You can publish the migration with:
 
 ```bash
-php artisan vendor:publish --provider="Jobful\HistoryTracking\ActivitylogServiceProvider" --tag="activitylog-migrations"
+php artisan vendor:publish --tag="historytrack-migrations"
 ```
 
 _Note_: The default migration assumes you are using integers for your model IDs. If you are using UUIDs, or some other format, adjust the format of the subject_id and causer_id fields in the published migration before continuing.
@@ -108,7 +108,7 @@ php artisan migrate
 You can optionally publish the config file with:
 
 ```bash
-php artisan vendor:publish --provider="Jobful\HistoryTracking\ActivitylogServiceProvider" --tag="historytrack-config"
+php artisan vendor:publish --tag="historytrack-config"
 ```
 
 ## Changelog
