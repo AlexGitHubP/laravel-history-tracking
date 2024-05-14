@@ -11,14 +11,14 @@ composer require spatie/laravel-activitylog
 
 The package will automatically register the service provider.
 
-If you want your activities to be stored in a special database connection you can define `ACTIVITY_LOGGER_DB_CONNECTION` in your `.env` file.
+If you want your activities to be stored in a special database connection you can define `HISTORY_LOGGER_DB_CONNECTION` in your `.env` file.
 
 After you've configured everything you should clear the application config cache via `artisan config:clear`.
 
 You can publish the migration with:
 
 ```bash
-php artisan vendor:publish --provider="Spatie\Activitylog\ActivitylogServiceProvider" --tag="activitylog-migrations"
+php artisan vendor:publish --provider="Jobful\HistoryTracking\ActivitylogServiceProvider" --tag="activitylog-migrations"
 ```
 
 After the migration has been published you can create the `activity_log` table by running the migrations:
@@ -30,7 +30,7 @@ php artisan migrate
 You can optionally publish the config file with:
 
 ```bash
-php artisan vendor:publish --provider="Spatie\Activitylog\ActivitylogServiceProvider" --tag="activitylog-config"
+php artisan vendor:publish --provider="Jobful\HistoryTracking\ActivitylogServiceProvider" --tag="activitylog-config"
 ```
 
 This is the contents of the published config file:
@@ -41,7 +41,7 @@ return [
     /*
      * If set to false, no activities will be saved to the database.
      */
-    'enabled' => env('ACTIVITY_LOGGER_ENABLED', true),
+    'enabled' => env('HISTORY_LOGGER_ENABLED', true),
 
     /*
      * When the clean-command is executed, all recording activities older than
@@ -68,14 +68,14 @@ return [
 
     /*
      * This model will be used to log activity.
-     * It should be implements the Spatie\Activitylog\Contracts\Activity interface
+     * It should be implements the Jobful\HistoryTracking\Contracts\HistoryTracking interface
      * and extend Illuminate\Database\Eloquent\Model.
      */
-    'activity_model' => \Spatie\Activitylog\Models\Activity::class,
+    'activity_model' => \Jobful\HistoryTracking\Models\HistoryTracking::class,
 
     /*
      * This is the name of the table that will be created by the migration and
-     * used by the Activity model shipped with this package.
+     * used by the HistoryTracking model shipped with this package.
      */
     'table_name' => 'activity_log',
 ];

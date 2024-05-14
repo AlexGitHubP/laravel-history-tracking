@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Activitylog;
+namespace Jobful\HistoryTracking;
 
 use Closure;
 use Ramsey\Uuid\Uuid;

@@ -11,7 +11,7 @@ This is the most basic way to log activity:
 activity()->log('Look mum, I logged something');
 ```
 
-You can retrieve the activity using the `Spatie\Activitylog\Models\Activity` model.
+You can retrieve the activity using the `Jobful\HistoryTracking\Models\Activity` model.
 
 ```php
 $lastActivity = Activity::all()->last(); //returns the last logged activity
@@ -103,7 +103,7 @@ activity()
 You can use the `tap()` method to fill properties and add custom fields before the activity is saved.
 
 ```php
-use Spatie\Activitylog\Contracts\Activity;
+use Jobful\HistoryTracking\Contracts\Activity;
 
 activity()
    ->causedBy($userModel)

@@ -4,23 +4,23 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Collection;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Models\Activity;
-use Spatie\Activitylog\Test\Enums\NonBackedEnum;
-use Spatie\Activitylog\Test\Models\Article;
-use Spatie\Activitylog\Test\Models\ArticleWithLogDescriptionClosure;
-use Spatie\Activitylog\Test\Models\Issue733;
-use Spatie\Activitylog\Test\Models\User;
-use Spatie\Activitylog\Traits\LogsActivity;
+use Jobful\HistoryTracking\HistoryTrackingOptions;
+use Jobful\HistoryTracking\Models\HistoryTracking;
+use Jobful\HistoryTracking\Test\Enums\NonBackedEnum;
+use Jobful\HistoryTracking\Test\Models\Article;
+use Jobful\HistoryTracking\Test\Models\ArticleWithLogDescriptionClosure;
+use Jobful\HistoryTracking\Test\Models\Issue733;
+use Jobful\HistoryTracking\Test\Models\User;
+use Jobful\HistoryTracking\Traits\LogsActivity;
 
 beforeEach(function () {
     $this->article = new class() extends Article {
         use LogsActivity;
         use SoftDeletes;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults();
+            return HistoryTrackingOptions::defaults();
         }
     };
 
@@ -28,18 +28,18 @@ beforeEach(function () {
         use LogsActivity;
         use SoftDeletes;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults();
+            return HistoryTrackingOptions::defaults();
         }
     };
 
-    $this->assertCount(0, Activity::all());
+    $this->assertCount(0, HistoryTracking::all());
 });
 
 it('will log the creation of the model', function () {
     $article = $this->createArticle();
-    $this->assertCount(1, Activity::all());
+    $this->assertCount(1, HistoryTracking::all());
 
     $this->assertInstanceOf(get_class($this->article), $this->getLastActivity()->subject);
     $this->assertEquals($article->id, $this->getLastActivity()->subject->id);
@@ -54,7 +54,7 @@ it('can skip logging model events if asked to', function () {
 
     $article->save();
 
-    $this->assertCount(0, Activity::all());
+    $this->assertCount(0, HistoryTracking::all());
     $this->assertNull($this->getLastActivity());
 });
 
@@ -69,7 +69,7 @@ it('can switch on activity logging after disabling it', function () {
     $article->name = 'my new name';
     $article->save();
 
-    $this->assertCount(1, Activity::all());
+    $this->assertCount(1, HistoryTracking::all());
     $this->assertInstanceOf(get_class($this->article), $this->getLastActivity()->subject);
     $this->assertEquals($article->id, $this->getLastActivity()->subject->id);
     $this->assertEquals('updated', $this->getLastActivity()->description);
@@ -80,7 +80,7 @@ it('can skip logging if asked to for update method', function () {
     $article = new $this->article();
     $article->disableLogging()->update(['name' => 'How to log events']);
 
-    $this->assertCount(0, Activity::all());
+    $this->assertCount(0, HistoryTracking::all());
     $this->assertNull($this->getLastActivity());
 });
 
@@ -90,7 +90,7 @@ it('will log an update of the model', function () {
     $article->name = 'changed name';
     $article->save();
 
-    $this->assertCount(2, Activity::all());
+    $this->assertCount(2, HistoryTracking::all());
 
     $this->assertInstanceOf(get_class($this->article), $this->getLastActivity()->subject);
     $this->assertEquals($article->id, $this->getLastActivity()->subject->id);
@@ -104,11 +104,11 @@ it('it will log the replication of a model with softdeletes', function () {
     $replicatedArticle = $this->article::find($article->id)->replicate();
     $replicatedArticle->save();
 
-    $activityItems = Activity::all();
+    $activityItems = HistoryTracking::all();
 
     $this->assertCount(2, $activityItems);
 
-    $this->assertTrue($activityItems->every(fn (Activity $item): bool => $item->event === 'created' &&
+    $this->assertTrue($activityItems->every(fn (HistoryTracking $item): bool => $item->event === 'created' &&
         $item->description === 'created' &&
         get_class($this->article) === $item->subject_type &&
         in_array($item->subject_id, [$article->id, $replicatedArticle->id])));
@@ -121,9 +121,9 @@ it('will log the deletion of a model without softdeletes', function () {
     $articleClass = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()->logOnly(['name']);
+            return HistoryTrackingOptions::defaults()->logOnly(['name']);
         }
     };
 
@@ -152,7 +152,7 @@ it('will log the deletion of a model with softdeletes', function () {
 
     $article->delete();
 
-    $this->assertCount(2, Activity::all());
+    $this->assertCount(2, HistoryTracking::all());
 
     $this->assertEquals(get_class($this->article), $this->getLastActivity()->subject_type);
     $this->assertEquals($article->id, $this->getLastActivity()->subject_id);
@@ -161,7 +161,7 @@ it('will log the deletion of a model with softdeletes', function () {
 
     $article->forceDelete();
 
-    $this->assertCount(3, Activity::all());
+    $this->assertCount(3, HistoryTracking::all());
 
     $this->assertEquals('deleted', $this->getLastActivity()->description);
     $this->assertEquals('deleted', $this->getLastActivity()->event);
@@ -175,7 +175,7 @@ it('will log the restoring of a model with softdeletes', function () {
 
     $article->restore();
 
-    $this->assertCount(3, Activity::all());
+    $this->assertCount(3, HistoryTracking::all());
 
     $this->assertEquals(get_class($this->article), $this->getLastActivity()->subject_type);
     $this->assertEquals($article->id, $this->getLastActivity()->subject_id);
@@ -219,9 +219,9 @@ it('can log activity to log named in the model', function () {
     $articleClass = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->useLogName('custom_log');
         }
     };
@@ -230,16 +230,16 @@ it('can log activity to log named in the model', function () {
     $article->name = 'my name';
     $article->save();
 
-    $this->assertSame('custom_log', Activity::latest()->first()->log_name);
+    $this->assertSame('custom_log', HistoryTracking::latest()->first()->log_name);
 });
 
 it('will not log an update of the model if only ignored attributes are changed', function () {
     $articleClass = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->dontLogIfAttributesChangedOnly(['text']);
         }
     };
@@ -251,7 +251,7 @@ it('will not log an update of the model if only ignored attributes are changed',
     $article->text = 'ignore me';
     $article->save();
 
-    $this->assertCount(1, Activity::all());
+    $this->assertCount(1, HistoryTracking::all());
 
     $this->assertInstanceOf(get_class($articleClass), $this->getLastActivity()->subject);
     $this->assertEquals($article->id, $this->getLastActivity()->subject->id);
@@ -264,9 +264,9 @@ it('will not fail if asked to replace from empty attribute', function () {
         use LogsActivity;
         use SoftDeletes;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->setDescriptionForEvent(fn (string $eventName): string => ":causer.name $eventName");
         }
     };
@@ -291,7 +291,7 @@ it('can log activity on subject by same causer', function () {
     $user->name = 'LogsActivity Name';
     $user->save();
 
-    $this->assertCount(1, Activity::all());
+    $this->assertCount(1, HistoryTracking::all());
 
     $this->assertInstanceOf(get_class($this->user), $this->getLastActivity()->subject);
     $this->assertEquals($user->id, $this->getLastActivity()->subject->id);
@@ -304,9 +304,9 @@ it('can log activity when attributes are changed with tap', function () {
     $model = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults();
+            return HistoryTrackingOptions::defaults();
         }
 
         protected $properties = [
@@ -315,7 +315,7 @@ it('can log activity when attributes are changed with tap', function () {
             ],
         ];
 
-        public function tapActivity(Activity $activity, string $eventName)
+        public function tapActivity(HistoryTracking $activity, string $eventName)
         {
             $properties = $this->properties;
             $properties['event'] = $eventName;
@@ -340,12 +340,12 @@ it('can log activity when description is changed with tap', function () {
     $model = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults();
+            return HistoryTrackingOptions::defaults();
         }
 
-        public function tapActivity(Activity $activity, string $eventName)
+        public function tapActivity(HistoryTracking $activity, string $eventName)
         {
             $activity->description = 'my custom description';
         }
@@ -363,12 +363,12 @@ it('can log activity when event is changed with tap', function () {
     $model = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults();
+            return HistoryTrackingOptions::defaults();
         }
 
-        public function tapActivity(Activity $activity, string $eventName)
+        public function tapActivity(HistoryTracking $activity, string $eventName)
         {
             $activity->event = 'my custom event';
         }
@@ -386,9 +386,9 @@ it('will not submit log when there is no changes', function () {
     $model = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['text'])
             ->dontSubmitEmptyLogs()
             ->logOnlyDirty();
@@ -398,12 +398,12 @@ it('will not submit log when there is no changes', function () {
     $entity = new $model(['text' => 'test']);
     $entity->save();
 
-    $this->assertCount(1, Activity::all());
+    $this->assertCount(1, HistoryTracking::all());
 
     $entity->name = 'my name';
     $entity->save();
 
-    $this->assertCount(1, Activity::all());
+    $this->assertCount(1, HistoryTracking::all());
 });
 
 it('will submit a log with json changes', function () {
@@ -414,9 +414,9 @@ it('will submit a log with json changes', function () {
             'json' => 'collection',
         ];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['text', 'json->data'])
             ->dontSubmitEmptyLogs()
             ->logOnlyDirty();
@@ -432,7 +432,7 @@ it('will submit a log with json changes', function () {
 
     $entity->save();
 
-    $this->assertCount(1, Activity::all());
+    $this->assertCount(1, HistoryTracking::all());
 
     $entity->json = [
         'data' => 'chips',
@@ -456,7 +456,7 @@ it('will submit a log with json changes', function () {
 
     $changes = $this->getLastActivity()->changes()->toArray();
 
-    $this->assertCount(2, Activity::all());
+    $this->assertCount(2, HistoryTracking::all());
     $this->assertSame($expectedChanges, $changes);
 });
 
@@ -481,9 +481,9 @@ it('will not log casted attribute of the model if attribute raw values is used',
             'name' => 'encrypted',
         ];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()->logOnly(['name'])->useAttributeRawValues(['name']);
+            return HistoryTrackingOptions::defaults()->logOnly(['name'])->useAttributeRawValues(['name']);
         }
     };
 
@@ -512,9 +512,9 @@ it('logs non backed enum casted attribute', function () {
             'status' => NonBackedEnum::class,
         ];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()->logOnly(['status']);
+            return HistoryTrackingOptions::defaults()->logOnly(['status']);
         }
     };
 
@@ -537,17 +537,17 @@ it('logs int backed enum casted attribute', function () {
         use LogsActivity;
 
         protected $casts = [
-            'status' => \Spatie\Activitylog\Test\Enums\IntBackedEnum::class,
+            'status' => \Jobful\HistoryTracking\Test\Enums\IntBackedEnum::class,
         ];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()->logOnly(['status']);
+            return HistoryTrackingOptions::defaults()->logOnly(['status']);
         }
     };
 
     $article = new $articleClass();
-    $article->status = \Spatie\Activitylog\Test\Enums\IntBackedEnum::Published;
+    $article->status = \Jobful\HistoryTracking\Test\Enums\IntBackedEnum::Published;
     $article->save();
 
     $this->assertInstanceOf(get_class($articleClass), $this->getLastActivity()->subject);
@@ -562,17 +562,17 @@ it('logs string backed enum casted attribute', function () {
         use LogsActivity;
 
         protected $casts = [
-            'status' => \Spatie\Activitylog\Test\Enums\StringBackedEnum::class,
+            'status' => \Jobful\HistoryTracking\Test\Enums\StringBackedEnum::class,
         ];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()->logOnly(['status']);
+            return HistoryTrackingOptions::defaults()->logOnly(['status']);
         }
     };
 
     $article = new $articleClass();
-    $article->status = \Spatie\Activitylog\Test\Enums\StringBackedEnum::Draft;
+    $article->status = \Jobful\HistoryTracking\Test\Enums\StringBackedEnum::Draft;
     $article->save();
 
     $this->assertInstanceOf(get_class($articleClass), $this->getLastActivity()->subject);

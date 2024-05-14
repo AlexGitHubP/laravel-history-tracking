@@ -1,9 +1,9 @@
 <?php
 
-namespace Spatie\Activitylog\Contracts;
+namespace Jobful\HistoryTracking\Contracts;
 
 use Closure;
-use Spatie\Activitylog\EventLogBag;
+use Jobful\HistoryTracking\EventLogBag;
 
 interface LoggablePipe
 {

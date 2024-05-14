@@ -1,16 +1,16 @@
 <?php
 
-use Spatie\Activitylog\ActivityLogger;
-use Spatie\Activitylog\ActivityLogStatus;
+use Jobful\HistoryTracking\HistoryTracking;
+use Jobful\HistoryTracking\HistoryTrackingStatus;
 
-if (! function_exists('activity')) {
-    function activity(string $logName = null): ActivityLogger
+if (! function_exists('historyTracking')) {
+    function historyTracking(string $logName = null): HistoryTracking
     {
         $defaultLogName = config('activitylog.default_log_name');
 
-        $logStatus = app(ActivityLogStatus::class);
+        $logStatus = app(HistoryTrackingStatus::class);
 
-        return app(ActivityLogger::class)
+        return app(HistoryTracking::class)
             ->useLog($logName ?? $defaultLogName)
             ->setLogStatus($logStatus);
     }

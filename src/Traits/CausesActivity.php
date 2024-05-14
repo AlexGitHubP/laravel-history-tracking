@@ -1,16 +1,16 @@
 <?php
 
-namespace Spatie\Activitylog\Traits;
+namespace Jobful\HistoryTracking\Traits;
 
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Spatie\Activitylog\ActivitylogServiceProvider;
+use Jobful\HistoryTracking\HistoryTrackingServiceProvider;
 
 trait CausesActivity
 {
     public function actions(): MorphMany
     {
         return $this->morphMany(
-            ActivitylogServiceProvider::determineActivityModel(),
+            HistoryTrackingServiceProvider::determineActivityModel(),
             'causer'
         );
     }

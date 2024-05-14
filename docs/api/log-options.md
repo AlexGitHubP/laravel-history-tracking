@@ -9,16 +9,16 @@ The most basic example of an Activity logged model would be:
 
 ```php
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\Activitylog\LogOptions;
+use Jobful\HistoryTracking\Traits\LogsActivity;
+use Jobful\HistoryTracking\HistoryTrackingOptions;
 
 class YourModel extends Model
 {
     use LogsActivity;
 
-    public function getActivitylogOptions(): LogOptions
+    public function getActivitylogOptions(): HistoryTrackingOptions
     {
-        return LogOptions::defaults();
+        return HistoryTrackingOptions::defaults();
     }
 }
 ```

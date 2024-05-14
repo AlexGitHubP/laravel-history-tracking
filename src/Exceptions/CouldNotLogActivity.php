@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Activitylog\Exceptions;
+namespace Jobful\HistoryTracking\Exceptions;
 
 use Exception;
 

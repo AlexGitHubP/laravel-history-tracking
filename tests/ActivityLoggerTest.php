@@ -3,14 +3,14 @@
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\JsonEncodingException;
 use Illuminate\Support\Collection;
-use Spatie\Activitylog\Exceptions\CouldNotLogActivity;
-use Spatie\Activitylog\Facades\CauserResolver;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Models\Activity;
-use Spatie\Activitylog\Test\Enums\NonBackedEnum;
-use Spatie\Activitylog\Test\Models\Article;
-use Spatie\Activitylog\Test\Models\User;
-use Spatie\Activitylog\Traits\LogsActivity;
+use Jobful\HistoryTracking\Exceptions\CouldNotLogActivity;
+use Jobful\HistoryTracking\Facades\CauserResolver;
+use Jobful\HistoryTracking\HistoryTrackingOptions;
+use Jobful\HistoryTracking\Models\HistoryTracking;
+use Jobful\HistoryTracking\Test\Enums\NonBackedEnum;
+use Jobful\HistoryTracking\Test\Models\Article;
+use Jobful\HistoryTracking\Test\Models\User;
+use Jobful\HistoryTracking\Traits\LogsActivity;
 
 beforeEach(function () {
     $this->activityDescription = 'My activity';
@@ -69,7 +69,7 @@ it('can log an activity with a subject', function () {
         ->performedOn($subject)
         ->log($this->activityDescription);
 
-    $firstActivity = Activity::first();
+    $firstActivity = HistoryTracking::first();
 
     expect($firstActivity->subject->id)->toEqual($subject->id);
     expect($firstActivity->subject)->toBeInstanceOf(Article::class);
@@ -82,7 +82,7 @@ it('can log an activity with a causer', function () {
         ->causedBy($user)
         ->log($this->activityDescription);
 
-    $firstActivity = Activity::first();
+    $firstActivity = HistoryTracking::first();
 
     expect($firstActivity->causer->id)->toEqual($user->id);
     expect($firstActivity->causer)->toBeInstanceOf(User::class);
@@ -95,7 +95,7 @@ it('can log an activity with a causer other than user model', function () {
         ->causedBy($article)
         ->log($this->activityDescription);
 
-    $firstActivity = Activity::first();
+    $firstActivity = HistoryTracking::first();
 
     expect($firstActivity->causer->id)->toEqual($article->id);
     expect($firstActivity->causer)->toBeInstanceOf(Article::class);
@@ -110,7 +110,7 @@ it('can log an activity with a causer that has been set from other context', fun
     activity()
            ->log($this->activityDescription);
 
-    $firstActivity = Activity::first();
+    $firstActivity = HistoryTracking::first();
 
     expect($firstActivity->causer->id)->toEqual($article->id);
     expect($firstActivity->causer)->toBeInstanceOf(Article::class);
@@ -127,7 +127,7 @@ it('can log an activity with a causer when there is no web guard', function () {
         ->causedBy($user)
         ->log($this->activityDescription);
 
-    $firstActivity = Activity::first();
+    $firstActivity = HistoryTracking::first();
 
     expect($firstActivity->causer->id)->toEqual($user->id);
     expect($firstActivity->causer)->toBeInstanceOf(User::class);
@@ -144,7 +144,7 @@ it('can log activity with properties', function () {
         ->withProperties($properties)
         ->log($this->activityDescription);
 
-    $firstActivity = Activity::first();
+    $firstActivity = HistoryTracking::first();
 
     expect($firstActivity->properties)->toBeInstanceOf(Collection::class);
     expect($firstActivity->getExtraProperty('property.subProperty'))->toEqual('value');
@@ -159,7 +159,7 @@ it('can log activity with null properties', function () {
         ->withProperties($properties)
         ->log($this->activityDescription);
 
-    $firstActivity = Activity::first();
+    $firstActivity = HistoryTracking::first();
 
     expect($firstActivity->properties)->toBeInstanceOf(Collection::class);
     expect($firstActivity->getExtraProperty('property'))->toBeNull();
@@ -170,7 +170,7 @@ it('can log activity with a single properties', function () {
         ->withProperty('key', 'value')
         ->log($this->activityDescription);
 
-    $firstActivity = Activity::first();
+    $firstActivity = HistoryTracking::first();
 
     expect($firstActivity->properties)->toBeInstanceOf(Collection::class);
     expect($firstActivity->getExtraProperty('key'))->toEqual('value');
@@ -184,7 +184,7 @@ it('can translate a given causer id to an object', function () {
         ->causedBy($userId)
         ->log($this->activityDescription);
 
-    $firstActivity = Activity::first();
+    $firstActivity = HistoryTracking::first();
 
     expect($firstActivity->causer)->toBeInstanceOf(User::class);
     expect($firstActivity->causer->id)->toEqual($userId);
@@ -284,7 +284,7 @@ it('will not replace non placeholders', function () {
 });
 
 it('returns an instance of the activity log after logging when using a custom model', function () {
-    $activityClass = new class() extends Activity {
+    $activityClass = new class() extends HistoryTracking {
     };
 
     $activityClassName = get_class($activityClass);
@@ -328,13 +328,13 @@ it('can log activity when attributes are changed with tap', function () {
     ];
 
     activity()
-        ->tap(function (Activity $activity) use ($properties) {
+        ->tap(function (HistoryTracking $activity) use ($properties) {
             $activity->properties = collect($properties);
             $activity->created_at = Carbon::yesterday()->startOfDay();
         })
         ->log($this->activityDescription);
 
-    $firstActivity = Activity::first();
+    $firstActivity = HistoryTracking::first();
 
     expect($firstActivity->properties)->toBeInstanceOf(Collection::class);
     expect($firstActivity->getExtraProperty('property.subProperty'))->toEqual('value');
@@ -345,12 +345,12 @@ it('will tap a subject', function () {
     $model = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults();
+            return HistoryTrackingOptions::defaults();
         }
 
-        public function tapActivity(Activity $activity, string $eventName)
+        public function tapActivity(HistoryTracking $activity, string $eventName)
         {
             $activity->description = 'my custom description';
         }
@@ -360,7 +360,7 @@ it('will tap a subject', function () {
         ->on($model)
         ->log($this->activityDescription);
 
-    $firstActivity = Activity::first();
+    $firstActivity = HistoryTracking::first();
     $this->assertEquals('my custom description', $firstActivity->description);
 });
 
@@ -371,7 +371,7 @@ it('will log a custom created at date time', function () {
         ->createdAt($activityDateTime)
         ->log('created');
 
-    $firstActivity = Activity::first();
+    $firstActivity = HistoryTracking::first();
 
     expect($firstActivity->created_at->toAtomString())->toEqual($activityDateTime->toAtomString());
 });
@@ -435,8 +435,8 @@ it('will disable logs for a callback without affecting previous state even with 
 
 it('logs backed enums in properties', function () {
     activity()
-        ->withProperties(['int_backed_enum' => \Spatie\Activitylog\Test\Enums\IntBackedEnum::Draft])
-        ->withProperty('string_backed_enum', \Spatie\Activitylog\Test\Enums\StringBackedEnum::Published)
+        ->withProperties(['int_backed_enum' => \Jobful\HistoryTracking\Test\Enums\IntBackedEnum::Draft])
+        ->withProperty('string_backed_enum', \Jobful\HistoryTracking\Test\Enums\StringBackedEnum::Published)
         ->log($this->activityDescription);
 
     $this->assertSame(0, $this->getLastActivity()->properties['int_backed_enum']);

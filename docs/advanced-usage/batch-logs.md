@@ -12,8 +12,8 @@ To start a new batch call `LogBatch::startBatch()` before any activity is done. 
 Here's an example:
 
 ```php
-use Spatie\Activitylog\Facades\LogBatch;
-use Spatie\Activitylog\Models\Activity;
+use Jobful\HistoryTracking\Facades\LogBatch;
+use Jobful\HistoryTracking\Models\HistoryTracking;
 
 LogBatch::startBatch();
 $author = Author::create(['name' => 'Philip K. Dick']);
@@ -44,8 +44,8 @@ Example results:
 **Note** that in the examples both `Author` and `Book` are implementing `LogsActivity` trait.
 
 ```php
-use Spatie\Activitylog\Facades\LogBatch;
-use Spatie\Activitylog\Models\Activity;
+use Jobful\HistoryTracking\Facades\LogBatch;
+use Jobful\HistoryTracking\Models\HistoryTracking;
 
 LogBatch::startBatch();
 
@@ -59,8 +59,8 @@ $author->delete();
 $batchUuid = LogBatch::getUuid(); // save batch id to retrieve activities later
 LogBatch::endBatch();
 
-$batchActivities = Activity::forBatch($batchUuid)->get();
-var_dump($batchActivities); // A collection of Activity models...
+$batchActivities = HistoryTracking::forBatch($batchUuid)->get();
+var_dump($batchActivities); // A collection of HistoryTracking models...
 // They will be in order: Author;created, Book;created, Book;updated,
 //      Book;created, Author;deleted, Book;deleted and Book;deleted
 ```
@@ -98,7 +98,7 @@ You may utilize `LogBatch::setBatch($uuid)` passing `$uuid` or any unique value 
 Here's an example:
 
 ```php
-use Spatie\Activitylog\Facades\LogBatch;
+use Jobful\HistoryTracking\Facades\LogBatch;
 use Illuminate\Bus\Batch;
 use Illuminate\Support\Str;
 
@@ -145,7 +145,7 @@ You can also batch activities using closure passed to `LogBatch::withinBatch()`.
 Here's an example:
 
 ```php
-use Spatie\Activitylog\Facades\LogBatch;
+use Jobful\HistoryTracking\Facades\LogBatch;
 
 LogBatch::withinBatch(function(string $uuid) {
     $uuid; // 5cce9cb3-3144-4d35-9015-830cf0f20691

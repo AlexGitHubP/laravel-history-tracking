@@ -1,9 +1,9 @@
 <?php
 
-use Spatie\Activitylog\Exceptions\InvalidConfiguration;
-use Spatie\Activitylog\Test\Models\Activity;
-use Spatie\Activitylog\Test\Models\AnotherInvalidActivity;
-use Spatie\Activitylog\Test\Models\InvalidActivity;
+use Jobful\HistoryTracking\Exceptions\InvalidConfiguration;
+use Jobful\HistoryTracking\Test\Models\Activity;
+use Jobful\HistoryTracking\Test\Models\AnotherInvalidActivity;
+use Jobful\HistoryTracking\Test\Models\InvalidActivity;
 
 beforeEach(function () {
     $this->activityDescription = 'My activity';

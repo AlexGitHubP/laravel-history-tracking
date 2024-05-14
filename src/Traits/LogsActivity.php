@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Activitylog\Traits;
+namespace Jobful\HistoryTracking\Traits;
 
 use Carbon\CarbonInterval;
 use DateInterval;
@@ -11,12 +11,12 @@ use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Spatie\Activitylog\ActivityLogger;
-use Spatie\Activitylog\ActivitylogServiceProvider;
-use Spatie\Activitylog\ActivityLogStatus;
-use Spatie\Activitylog\Contracts\LoggablePipe;
-use Spatie\Activitylog\EventLogBag;
-use Spatie\Activitylog\LogOptions;
+use Jobful\HistoryTracking\HistoryTracking;
+use Jobful\HistoryTracking\HistoryTrackingServiceProvider;
+use Jobful\HistoryTracking\HistoryTrackingStatus;
+use Jobful\HistoryTracking\Contracts\LoggablePipe;
+use Jobful\HistoryTracking\EventLogBag;
+use Jobful\HistoryTracking\HistoryTrackingOptions;
 
 trait LogsActivity
 {
@@ -24,11 +24,11 @@ trait LogsActivity
 
     protected array $oldAttributes = [];
 
-    protected ?LogOptions $activitylogOptions;
+    protected ?HistoryTrackingOptions $activitylogOptions;
 
     public bool $enableLoggingModelsEvents = true;
 
-    abstract public function getActivitylogOptions(): LogOptions;
+    abstract public function getActivitylogOptions(): HistoryTrackingOptions;
 
     protected static function bootLogsActivity(): void
     {
@@ -75,7 +75,7 @@ trait LogsActivity
                     ->thenReturn();
 
                 // Actual logging
-                $logger = app(ActivityLogger::class)
+                $logger = app(HistoryTracking::class)
                     ->useLog($logName)
                     ->event($eventName)
                     ->performedOn($model)
@@ -119,7 +119,7 @@ trait LogsActivity
 
     public function activities(): MorphMany
     {
-        return $this->morphMany(ActivitylogServiceProvider::determineActivityModel(), 'subject');
+        return $this->morphMany(HistoryTrackingServiceProvider::determineActivityModel(), 'subject');
     }
 
     public function getDescriptionForEvent(string $eventName): string
@@ -164,7 +164,7 @@ trait LogsActivity
 
     protected function shouldLogEvent(string $eventName): bool
     {
-        $logStatus = app(ActivityLogStatus::class);
+        $logStatus = app(HistoryTrackingStatus::class);
 
         if (! $this->enableLoggingModelsEvents || $logStatus->disabled()) {
             return false;

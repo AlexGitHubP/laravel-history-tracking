@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Activitylog;
+namespace Jobful\HistoryTracking;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,7 +10,7 @@ class EventLogBag
         public string $event,
         public Model $model,
         public array $changes,
-        public ?LogOptions $options = null
+        public ?HistoryTrackingOptions $options = null
     ) {
         $this->options ??= $model->getActivitylogOptions();
     }

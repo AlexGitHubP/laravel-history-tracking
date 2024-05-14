@@ -1,10 +1,10 @@
 <?php
 
-namespace Spatie\Activitylog;
+namespace Jobful\HistoryTracking;
 
 use Illuminate\Contracts\Config\Repository;
 
-class ActivityLogStatus
+class HistoryTrackingStatus
 {
     protected $enabled = true;
 

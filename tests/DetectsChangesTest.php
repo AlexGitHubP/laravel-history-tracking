@@ -4,28 +4,28 @@ use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
-use Spatie\Activitylog\Contracts\LoggablePipe;
-use Spatie\Activitylog\EventLogBag;
-use Spatie\Activitylog\LogBatch;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Models\Activity;
-use Spatie\Activitylog\Test\Casts\IntervalCasts;
-use Spatie\Activitylog\Test\Models\Article;
-use Spatie\Activitylog\Test\Models\User;
-use Spatie\Activitylog\Traits\LogsActivity;
+use Jobful\HistoryTracking\Contracts\LoggablePipe;
+use Jobful\HistoryTracking\EventLogBag;
+use Jobful\HistoryTracking\LogBatch;
+use Jobful\HistoryTracking\HistoryTrackingOptions;
+use Jobful\HistoryTracking\Models\HistoryTracking;
+use Jobful\HistoryTracking\Test\Casts\IntervalCasts;
+use Jobful\HistoryTracking\Test\Models\Article;
+use Jobful\HistoryTracking\Test\Models\User;
+use Jobful\HistoryTracking\Traits\LogsActivity;
 
 beforeEach(function () {
     $this->article = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['name', 'text']);
         }
     };
 
-    $this->assertCount(0, Activity::all());
+    $this->assertCount(0, HistoryTracking::all());
 });
 
 it('can store the values when creating a model', function () {
@@ -49,9 +49,9 @@ it('deep diff check json field', function () {
             'json' => 'collection',
         ];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->dontSubmitEmptyLogs()
             ->logOnlyDirty()
             ->logOnly(['json->phone', 'json->details', 'json->address']);
@@ -114,9 +114,9 @@ it('detect changes for date inteval attributes', function () {
             'interval' => IntervalCasts::class,
         ];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['name', 'interval'])
             ->logOnlyDirty();
         }
@@ -152,9 +152,9 @@ it('detect changes for null date inteval attributes', function () {
                 'interval' => IntervalCasts::class,
             ];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
                 ->logAll()
                 ->dontLogIfAttributesChangedOnly(['created_at', 'updated_at', 'deleted_at'])
                 ->logOnlyDirty();
@@ -204,9 +204,9 @@ it('can store the relation values when creating a model', function () {
     $articleClass = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['name', 'text', 'user.name']);
         }
     };
@@ -246,9 +246,9 @@ it('retruns same uuid for all log changes under one batch', function () {
         use LogsActivity;
         use SoftDeletes;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
                 ->logOnly(['name', 'text']);
         }
     };
@@ -276,7 +276,7 @@ it('retruns same uuid for all log changes under one batch', function () {
 
     app(LogBatch::class)->endBatch();
 
-    $this->assertTrue(Activity::pluck('batch_uuid')->every(fn ($uuid) => $uuid === $batchUuid));
+    $this->assertTrue(HistoryTracking::pluck('batch_uuid')->every(fn ($uuid) => $uuid === $batchUuid));
 });
 
 it('assigns new uuid for multiple change logs in different batches', function () {
@@ -284,9 +284,9 @@ it('assigns new uuid for multiple change logs in different batches', function ()
         use LogsActivity;
         use SoftDeletes;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
                   ->logOnly(['name', 'text']);
         }
     };
@@ -306,7 +306,7 @@ it('assigns new uuid for multiple change logs in different batches', function ()
 
     app(LogBatch::class)->endBatch();
 
-    $this->assertTrue(Activity::pluck('batch_uuid')->every(fn ($uuid) => $uuid === $uuidForCreatedEvent));
+    $this->assertTrue(HistoryTracking::pluck('batch_uuid')->every(fn ($uuid) => $uuid === $uuidForCreatedEvent));
 
     app(LogBatch::class)->startBatch();
 
@@ -317,9 +317,9 @@ it('assigns new uuid for multiple change logs in different batches', function ()
 
     app(LogBatch::class)->endBatch();
 
-    $this->assertCount(1, Activity::where('description', 'updated')->get());
+    $this->assertCount(1, HistoryTracking::where('description', 'updated')->get());
 
-    $this->assertEquals($uuidForUpdatedEvents, Activity::where('description', 'updated')->first()->batch_uuid);
+    $this->assertEquals($uuidForUpdatedEvents, HistoryTracking::where('description', 'updated')->first()->batch_uuid);
 
     app(LogBatch::class)->startBatch();
     $article->delete();
@@ -329,7 +329,7 @@ it('assigns new uuid for multiple change logs in different batches', function ()
 
     app(LogBatch::class)->endBatch();
 
-    $this->assertCount(2, Activity::where('batch_uuid', $uuidForDeletedEvents)->get());
+    $this->assertCount(2, HistoryTracking::where('batch_uuid', $uuidForDeletedEvents)->get());
 
     $this->assertNotSame($uuidForCreatedEvent, $uuidForDeletedEvents);
 });
@@ -338,9 +338,9 @@ it('can removes key event if it was loggable', function () {
     $articleClass = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['name', 'text', 'user.name']);
         }
     };
@@ -386,9 +386,9 @@ it('can store empty relation when creating a model', function () {
     $articleClass = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['name', 'text', 'user.name']);
         }
     };
@@ -492,9 +492,9 @@ it('can store the changes when updating a related model', function () {
     $articleClass = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['name', 'text', 'user.name']);
         }
     };
@@ -535,9 +535,9 @@ it('can store the changes when updating a snake case related model', function ()
     $articleClass = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['name', 'text', 'snakeUser.name']);
         }
 
@@ -583,9 +583,9 @@ it('can store the changes when updating a camel case related model', function ()
     $articleClass = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['name', 'text', 'camel_user.name']);
         }
 
@@ -631,9 +631,9 @@ it('can store the changes when updating a custom case related model', function (
     $articleClass = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['name', 'text', 'Custom_Case_User.name']);
         }
 
@@ -679,9 +679,9 @@ it('can store the dirty changes when updating a related model', function () {
     $articleClass = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['name', 'text', 'user.name'])
             ->logOnlyDirty();
         }
@@ -719,9 +719,9 @@ it('can store the changes when saving including multi level related model', func
     $articleClass = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['name', 'text', 'user.latest_article.name'])
             ->logOnlyDirty();
         }
@@ -758,9 +758,9 @@ it('will store no changes when not logging attributes', function () {
     $articleClass = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly([]);
         }
     };
@@ -795,9 +795,9 @@ it('will store the values when deleting the model with softdeletes', function ()
         use LogsActivity;
         use SoftDeletes;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['name', 'text']);
         }
     };
@@ -839,9 +839,9 @@ it('can store the changes of collection casted properties', function () {
         use LogsActivity;
         protected $casts = ['json' => 'collection'];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['json'])
             ->logOnlyDirty();
         }
@@ -874,9 +874,9 @@ it('can store the changes of array casted properties', function () {
         use LogsActivity;
         protected $casts = ['json' => 'array'];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['json'])
             ->logOnlyDirty();
         }
@@ -909,9 +909,9 @@ it('can store the changes of json casted properties', function () {
         use LogsActivity;
         protected $casts = ['json' => 'json'];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['json'])
             ->logOnlyDirty();
         }
@@ -945,9 +945,9 @@ it('can use nothing as loggable attributes', function () {
 
         protected $fillable = ['name', 'text'];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->dontLogFillable();
         }
     };
@@ -968,9 +968,9 @@ it('can use text as loggable attributes', function () {
 
         protected $fillable = ['name', 'text'];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['text'])
             ->dontLogFillable();
         }
@@ -996,9 +996,9 @@ it('can use fillable as loggable attributes', function () {
 
         protected $fillable = ['name', 'text'];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logFillable();
         }
     };
@@ -1023,9 +1023,9 @@ it('can use both fillable and log attributes', function () {
 
         protected $fillable = ['name'];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['text'])
             ->logFillable();
         }
@@ -1050,9 +1050,9 @@ it('can use wildcard for loggable attributes', function () {
     $articleClass = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logAll();
         }
     };
@@ -1086,9 +1086,9 @@ it('can use wildcard with relation', function () {
     $articleClass = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['*', 'user.name']);
         }
     };
@@ -1129,9 +1129,9 @@ it('can use wildcard when updating model', function () {
     $articleClass = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logAll()
             ->logOnlyDirty();
         }
@@ -1174,9 +1174,9 @@ it('can store the changes when a boolean field is changed from false to null', f
             'text' => 'boolean',
         ];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logAll()
             ->logOnlyDirty();
         }
@@ -1216,9 +1216,9 @@ it('can use ignored attributes while updating', function () {
     $articleClass = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logAll()
             ->logExcept(['name', 'updated_at']);
         }
@@ -1253,9 +1253,9 @@ it('can use unguarded as loggable attributes', function () {
 
         protected $guarded = ['text', 'json'];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logUnguarded()
             ->logExcept(['id', 'created_at', 'updated_at', 'deleted_at']);
         }
@@ -1285,9 +1285,9 @@ it('will store no changes when wildcard guard and log unguarded attributes', fun
 
         protected $guarded = ['*'];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logUnguarded();
         }
     };
@@ -1307,9 +1307,9 @@ it('can use hidden as loggable attributes', function () {
         protected $hidden = ['text'];
         protected $fillable = ['name', 'text'];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['name', 'text']);
         }
     };
@@ -1335,9 +1335,9 @@ it('can use overloaded as loggable attributes', function () {
 
         protected $fillable = ['name', 'text'];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['name', 'text', 'description']);
         }
 
@@ -1375,9 +1375,9 @@ it('can use mutated as loggable attributes', function () {
 
         protected $fillable = ['name', 'text'];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logAll();
         }
 
@@ -1437,9 +1437,9 @@ it('can use accessor as loggable attributes', function () {
 
         protected $fillable = ['name', 'text'];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logAll();
         }
 
@@ -1500,9 +1500,9 @@ it('can use encrypted as loggable attributes', function () {
         protected $fillable = ['name', 'text'];
         protected $encryptable = ['name', 'text'];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['name', 'text']);
         }
 
@@ -1567,9 +1567,9 @@ it('can use casted as loggable attribute', function () {
             'price' => 'float',
         ];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['name', 'text', 'price'])
             ->logOnlyDirty();
         }
@@ -1623,9 +1623,9 @@ it('can use nullable date as loggable attributes', function () {
             'deleted_at',
         ];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logAll();
         }
     };
@@ -1659,9 +1659,9 @@ it('can use custom date cast as loggable attributes', function () {
             'created_at' => 'date:d.m.Y',
         ];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logAll();
         }
     };
@@ -1695,9 +1695,9 @@ it('can use custom immutable date cast as loggable attributes', function () {
             'created_at' => 'immutable_date:d.m.Y',
         ];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logAll();
         }
     };
@@ -1730,9 +1730,9 @@ it('can store the changes of json attributes', function () {
             'json' => 'collection',
         ];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['name', 'json->data'])
             ->logOnlyDirty();
         }
@@ -1765,9 +1765,9 @@ it('will not store changes to untracked json', function () {
             'json' => 'collection',
         ];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['name', 'json->data'])
             ->logOnlyDirty();
         }
@@ -1804,9 +1804,9 @@ it('will return null for missing json attribute', function () {
             'json' => 'collection',
         ];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['name', 'json->data->missing'])
             ->logOnlyDirty();
         }
@@ -1854,9 +1854,9 @@ it('will return an array for sub key in json attribute', function () {
             'json' => 'collection',
         ];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['name', 'json->data'])
             ->logOnlyDirty();
         }
@@ -1920,9 +1920,9 @@ it('will access further than level one json attribute', function () {
             'json' => 'collection',
         ];
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['name', 'json->data->can->go->how->far'])
             ->logOnlyDirty();
         }
@@ -1980,9 +1980,9 @@ function createDirtyArticle(): Article
     $articleClass = new class() extends Article {
         use LogsActivity;
 
-        public function getActivitylogOptions(): LogOptions
+        public function getActivitylogOptions(): HistoryTrackingOptions
         {
-            return LogOptions::defaults()
+            return HistoryTrackingOptions::defaults()
             ->logOnly(['name', 'text'])
             ->logOnlyDirty();
         }
@@ -1995,9 +1995,9 @@ function createDirtyArticle(): Article
     return $article;
 }
 
-function getActivitylogOptions(): LogOptions
+function getActivitylogOptions(): HistoryTrackingOptions
 {
-    return LogOptions::defaults()
+    return HistoryTrackingOptions::defaults()
     ->logOnly(['name', 'text'])
     ->logOnlyDirty();
 }

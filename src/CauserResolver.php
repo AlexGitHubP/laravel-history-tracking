@@ -1,12 +1,12 @@
 <?php
 
-namespace Spatie\Activitylog;
+namespace Jobful\HistoryTracking;
 
 use Closure;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\Exceptions\CouldNotLogActivity;
+use Jobful\HistoryTracking\Exceptions\CouldNotLogActivity;
 
 class CauserResolver
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Activitylog\Contracts;
+namespace Jobful\HistoryTracking\Contracts;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::connection(config('activitylog.database_connection'))->table(config('activitylog.table_name'), function (Blueprint $table) {
             $table->enum('type', array('activity_tracking', 'history_tracking'))->nullable()->after('properties');
             $table->integer('owner')->unsigned()->nullable()->index()->after('type');
-            $table->dateTime('performed_on')->nullable()->after('owner');
+            $table->dateTime('performed_at')->nullable()->after('batch_uuid');
         });
     }
 

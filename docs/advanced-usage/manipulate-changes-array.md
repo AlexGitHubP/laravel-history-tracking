@@ -8,8 +8,8 @@ In some cases you may want to manipulate/control changes array, v4 made this pos
 ```php
 // RemoveKeyFromLogChangesPipe.php
 
-use Spatie\Activitylog\Contracts\LoggablePipe;
-use Spatie\Activitylog\EventLogBag;
+use Jobful\HistoryTracking\Contracts\LoggablePipe;
+use Jobful\HistoryTracking\EventLogBag;
 
 class RemoveKeyFromLogChangesPipe implements LoggablePipe
 {
@@ -49,7 +49,7 @@ By adding i.e. `RemoveKeyFromLogChangesPipe` pipe every time log NewsItem is cha
 
 ## Add pipes
 
-Every pipe should implement `Spatie\Activitylog\Contracts\LoggablePipe` that enforces `handle()` method that will receive `Spatie\Activitylog\EventLogBag` and the next pipe. Your pipe must return the next pipe passing the event applying your changes `return $next($event)`.
+Every pipe should implement `Jobful\HistoryTracking\Contracts\LoggablePipe` that enforces `handle()` method that will receive `Jobful\HistoryTracking\EventLogBag` and the next pipe. Your pipe must return the next pipe passing the event applying your changes `return $next($event)`.
 
 ```php
 

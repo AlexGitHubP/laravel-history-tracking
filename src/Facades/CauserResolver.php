@@ -1,16 +1,16 @@
 <?php
 
-namespace Spatie\Activitylog\Facades;
+namespace Jobful\HistoryTracking\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Spatie\Activitylog\CauserResolver as ActivitylogCauserResolver;
+use Jobful\HistoryTracking\CauserResolver as ActivitylogCauserResolver;
 
 /**
  * @method static \Illuminate\Database\Eloquent\Model|null resolve(\Illuminate\Database\Eloquent\Model|int|string|null $subject = null)
- * @method static \Spatie\Activitylog\CauserResolver resolveUsing(\Closure $callback)
- * @method static \Spatie\Activitylog\CauserResolver setCauser(\Illuminate\Database\Eloquent\Model|null $causer)
+ * @method static \Jobful\HistoryTracking\CauserResolver resolveUsing(\Closure $callback)
+ * @method static \Jobful\HistoryTracking\CauserResolver setCauser(\Illuminate\Database\Eloquent\Model|null $causer)
  *
- * @see \Spatie\Activitylog\CauserResolver
+ * @see \Jobful\HistoryTracking\CauserResolver
  */
 class CauserResolver extends Facade
 {

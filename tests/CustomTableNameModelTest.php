@@ -1,16 +1,16 @@
 <?php
 
-use Spatie\Activitylog\Models\Activity;
-use Spatie\Activitylog\Test\Models\CustomTableNameOnActivityModel;
+use Jobful\HistoryTracking\Models\HistoryTracking;
+use Jobful\HistoryTracking\Test\Models\CustomTableNameOnHistoryTrackingModel;
 
 it('uses the table name from the configuration', function () {
-    $model = new Activity();
+    $model = new HistoryTracking();
 
     expect(config('activitylog.table_name'))->toEqual($model->getTable());
 });
 
 it('uses a custom table name', function () {
-    $model = new Activity();
+    $model = new HistoryTracking();
     $newTableName = 'my_personal_activities';
 
     $model->setTable($newTableName);
@@ -20,7 +20,7 @@ it('uses a custom table name', function () {
 });
 
 it('uses the table name from the model', function () {
-    $model = new CustomTableNameOnActivityModel();
+    $model = new CustomTableNameOnHistoryTrackingModel();
 
     $this->assertNotEquals($model->getTable(), config('activitylog.table_name'));
     expect('custom_table_name')->toEqual($model->getTable());

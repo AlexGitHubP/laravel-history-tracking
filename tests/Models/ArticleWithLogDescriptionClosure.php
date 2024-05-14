@@ -1,17 +1,17 @@
 <?php
 
-namespace Spatie\Activitylog\Test\Models;
+namespace Jobful\HistoryTracking\Test\Models;
 
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
+use Jobful\HistoryTracking\HistoryTrackingOptions;
+use Jobful\HistoryTracking\Traits\LogsActivity;
 
 class ArticleWithLogDescriptionClosure extends Article
 {
     use LogsActivity;
 
-    public function getActivitylogOptions(): LogOptions
+    public function getActivitylogOptions(): HistoryTrackingOptions
     {
-        return LogOptions::defaults()
+        return HistoryTrackingOptions::defaults()
             ->setDescriptionForEvent(function ($eventName) {
                 return $eventName;
             });

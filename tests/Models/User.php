@@ -1,10 +1,10 @@
 <?php
 
-namespace Spatie\Activitylog\Test\Models;
+namespace Jobful\HistoryTracking\Test\Models;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\Traits\CausesActivity;
+use Jobful\HistoryTracking\Traits\CausesActivity;
 
 class User extends Model implements Authenticatable
 {

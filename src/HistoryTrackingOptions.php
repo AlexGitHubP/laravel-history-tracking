@@ -1,10 +1,10 @@
 <?php
 
-namespace Spatie\Activitylog;
+namespace Jobful\HistoryTracking;
 
 use Closure;
 
-class LogOptions
+class HistoryTrackingOptions
 {
     public ?string $logName = null;
 

@@ -156,7 +156,7 @@ All notable changes to `spatie/laravel-activitylog` will be documented in this f
 
 ## 4.3.0 - 2021-10-20
 
-- Add `\Spatie\Activitylog\LogOptions::useAttributeRawValues()` to log uncasted attributes - [#972](https://github.com/spatie/laravel-activitylog/issues/972)
+- Add `\Jobful\HistoryTracking\LogOptions::useAttributeRawValues()` to log uncasted attributes - [#972](https://github.com/spatie/laravel-activitylog/issues/972)
 
 ## 4.2.0 - 2021-10-06
 
@@ -168,7 +168,7 @@ All notable changes to `spatie/laravel-activitylog` will be documented in this f
 
 ## 4.1.0 - 2021-07-23
 
-- Add `\Spatie\Activitylog\LogBatch::setBatch(string $uuid)` method to keep batches across requests or multiple jobs - [#918](https://github.com/spatie/laravel-activitylog/issues/918)
+- Add `\Jobful\HistoryTracking\LogBatch::setBatch(string $uuid)` method to keep batches across requests or multiple jobs - [#918](https://github.com/spatie/laravel-activitylog/issues/918)
 
 ## 4.0.0 - 2021-05-04
 
@@ -228,11 +228,11 @@ Special thanks to [Ahmed Nagi](https://github.com/nagi1).
 
 Please use `v3.14.1` instead - this release is breaking because of the new column. There is also a `v4.0.0-rc.1` release that equals to this one.
 
-- add `\Spatie\Activitylog\ActivityLogger::event()` method and column [#702](https://github.com/spatie/laravel-activitylog/pull/702)
+- add `\Jobful\HistoryTracking\ActivityLogger::event()` method and column [#702](https://github.com/spatie/laravel-activitylog/pull/702)
 
 ## 3.13.0 - 2020-03-13
 
-- add `\Spatie\Activitylog\ActivityLogger::withoutLogs()` method [#695](https://github.com/spatie/laravel-activitylog/pull/695)
+- add `\Jobful\HistoryTracking\ActivityLogger::withoutLogs()` method [#695](https://github.com/spatie/laravel-activitylog/pull/695)
 
 ## 3.12.0 - 2020-03-13
 
@@ -292,7 +292,7 @@ Please use `v3.14.1` instead - this release is breaking because of the new colum
 
 ## 3.7.0 - 2019-07-23
 
-- add database connection to configuration `activitylog.database_connection` and `ACTIVITY_LOGGER_DB_CONNECTION` env var [#568](https://github.com/spatie/laravel-activitylog/pull/568)
+- add database connection to configuration `activitylog.database_connection` and `HISTORY_LOGGER_DB_CONNECTION` env var [#568](https://github.com/spatie/laravel-activitylog/pull/568)
 
 ## 3.6.3 - 2019-07-23
 

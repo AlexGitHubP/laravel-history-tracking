@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Activitylog\Test;
+namespace Jobful\HistoryTracking\Test;
 
 use AddBatchUuidColumnToActivityLogTable;
 use AddEventColumnToActivityLogTable;
@@ -9,10 +9,10 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
-use Spatie\Activitylog\ActivitylogServiceProvider;
-use Spatie\Activitylog\Models\Activity;
-use Spatie\Activitylog\Test\Models\Article;
-use Spatie\Activitylog\Test\Models\User;
+use Jobful\HistoryTracking\HistoryTrackingServiceProvider;
+use Jobful\HistoryTracking\Models\HistoryTracking;
+use Jobful\HistoryTracking\Test\Models\Article;
+use Jobful\HistoryTracking\Test\Models\User;
 
 abstract class TestCase extends OrchestraTestCase
 {
@@ -26,7 +26,7 @@ abstract class TestCase extends OrchestraTestCase
     protected function getPackageProviders($app)
     {
         return [
-            ActivitylogServiceProvider::class,
+            HistoryTrackingServiceProvider::class,
         ];
     }
 
@@ -95,9 +95,9 @@ abstract class TestCase extends OrchestraTestCase
         });
     }
 
-    public function getLastActivity(): ?Activity
+    public function getLastActivity(): ?HistoryTracking
     {
-        return Activity::all()->last();
+        return HistoryTracking::all()->last();
     }
 
     public function markTestAsPassed(): void

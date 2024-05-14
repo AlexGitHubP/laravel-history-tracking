@@ -1,16 +1,16 @@
 <?php
 
-namespace Spatie\Activitylog;
+namespace Jobful\HistoryTracking;
 
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\Contracts\Activity;
-use Spatie\Activitylog\Contracts\Activity as ActivityContract;
-use Spatie\Activitylog\Exceptions\InvalidConfiguration;
-use Spatie\Activitylog\Models\Activity as ActivityModel;
+use Jobful\HistoryTracking\Contracts\Activity;
+use Jobful\HistoryTracking\Contracts\Activity as ActivityContract;
+use Jobful\HistoryTracking\Exceptions\InvalidConfiguration;
+use Jobful\HistoryTracking\Models\HistoryTracking as ActivityModel;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class ActivitylogServiceProvider extends PackageServiceProvider
+class HistoryTrackingServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
@@ -23,18 +23,22 @@ class ActivitylogServiceProvider extends PackageServiceProvider
             'add_batch_uuid_column_to_activity_log_table',
             'add_history_tracking_support_to_activity_log_table'
         ])
-        ->hasCommand(CleanActivitylogCommand::class);
+        ->hasCommand(CleanHistoryTrackingCommand::class);
+
+        $this->publishes([
+            __DIR__.'/Models/PredefinedEvents.php' => app_path('Models/TestModel.php'),
+        ], 'history-tracking-models');
     }
 
     public function registeringPackage()
     {
-        $this->app->bind(ActivityLogger::class);
+        $this->app->bind(HistoryTracking::class);
 
         $this->app->scoped(LogBatch::class);
 
         $this->app->scoped(CauserResolver::class);
 
-        $this->app->scoped(ActivityLogStatus::class);
+        $this->app->scoped(HistoryTrackingStatus::class);
     }
 
     public static function determineActivityModel(): string

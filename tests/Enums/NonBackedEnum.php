@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Activitylog\Test\Enums;
+namespace Jobful\HistoryTracking\Test\Enums;
 
 enum NonBackedEnum
 {

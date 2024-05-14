@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Activitylog;
+namespace Jobful\HistoryTracking;
 
 use Closure;
 use DateTimeInterface;
@@ -10,24 +10,26 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
-use Spatie\Activitylog\Contracts\Activity as ActivityContract;
+use Jobful\HistoryTracking\Contracts\Activity as ActivityContract;
 
-class ActivityLogger
+class HistoryTracking
 {
     use Conditionable;
     use Macroable;
 
     protected ?string $defaultLogName = null;
 
+    protected ?string $defaultTrackingType = 'activity_tracking';
+
     protected CauserResolver $causerResolver;
 
-    protected ActivityLogStatus $logStatus;
+    protected HistoryTrackingStatus $logStatus;
 
     protected ?ActivityContract $activity = null;
 
     protected LogBatch $batch;
 
-    public function __construct(Repository $config, ActivityLogStatus $logStatus, LogBatch $batch, CauserResolver $causerResolver)
+    public function __construct(Repository $config, HistoryTrackingStatus $logStatus, LogBatch $batch, CauserResolver $causerResolver)
     {
         $this->causerResolver = $causerResolver;
 
@@ -38,7 +40,7 @@ class ActivityLogger
         $this->logStatus = $logStatus;
     }
 
-    public function setLogStatus(ActivityLogStatus $logStatus): static
+    public function setLogStatus(HistoryTrackingStatus $logStatus): static
     {
         $this->logStatus = $logStatus;
 
@@ -124,6 +126,33 @@ class ActivityLogger
     public function useLog(?string $logName): static
     {
         $this->getActivity()->log_name = $logName;
+
+        return $this;
+    }
+
+    public function ownedBy($owner = null): static
+    {
+        $this->activity->owner = ($owner) ? $owner->getKey() : null;
+
+        return $this;
+    }
+
+    public function type($type = null): static
+    {
+        $this->activity->type = $type;
+
+        return $this;
+    }
+
+    public function useType(?string $trackingType): static
+    {
+        $this->getActivity()->type = $trackingType;
+
+        return $this;
+    }
+    public function performedAt(DateTimeInterface $dateTime): static
+    {
+        $this->getActivity()->performed_at = Carbon::instance($dateTime);
 
         return $this;
     }
@@ -219,9 +248,10 @@ class ActivityLogger
     protected function getActivity(): ActivityContract
     {
         if (! $this->activity instanceof ActivityContract) {
-            $this->activity = ActivitylogServiceProvider::getActivityModelInstance();
+            $this->activity = HistoryTrackingServiceProvider::getActivityModelInstance();
             $this
                 ->useLog($this->defaultLogName)
+                ->useType($this->defaultTrackingType)
                 ->withProperties([])
                 ->causedBy($this->causerResolver->resolve());
 

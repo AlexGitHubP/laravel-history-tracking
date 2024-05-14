@@ -1,5 +1,5 @@
 <?php
 
-use Spatie\Activitylog\Test\TestCase;
+use Jobful\HistoryTracking\Test\TestCase;
 
 uses(TestCase::class)->in(__DIR__);

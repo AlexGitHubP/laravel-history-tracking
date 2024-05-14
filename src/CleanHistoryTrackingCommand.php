@@ -1,13 +1,13 @@
 <?php
 
-namespace Spatie\Activitylog;
+namespace Jobful\HistoryTracking;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 use Illuminate\Database\Eloquent\Builder;
 
-class CleanActivitylogCommand extends Command
+class CleanHistoryTrackingCommand extends Command
 {
     use ConfirmableTrait;
 
@@ -32,7 +32,7 @@ class CleanActivitylogCommand extends Command
 
         $cutOffDate = Carbon::now()->subDays($maxAgeInDays)->format('Y-m-d H:i:s');
 
-        $activity = ActivitylogServiceProvider::getActivityModelInstance();
+        $activity = HistoryTrackingServiceProvider::getActivityModelInstance();
 
         $amountDeleted = $activity::query()
             ->where('created_at', '<', $cutOffDate)

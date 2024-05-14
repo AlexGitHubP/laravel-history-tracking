@@ -11,7 +11,7 @@ Here's a litte demo of how you can use it:
 activity()->log('Look mum, I logged something');
 ```
 
-You can retrieve all activity using the `Spatie\Activitylog\Models\Activity` model.
+You can retrieve all activity using the `Jobful\HistoryTracking\Models\Activity` model.
 
 ```php
 Activity::all();

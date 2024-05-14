@@ -5,7 +5,12 @@ return [
     /*
      * If set to false, no activities will be saved to the database.
      */
-    'enabled' => env('ACTIVITY_LOGGER_ENABLED', true),
+    'enabled' => env('HISTORY_LOGGER_ENABLED', true),
+
+    /*
+     * If set to true, you can define custom events in admin.
+     */
+    'custom_tracking' => env('HISTORY_CUSTOM_TRACKING_ENABLED', false),
 
     /*
      * When the clean-command is executed, all recording activities older than
@@ -32,21 +37,21 @@ return [
 
     /*
      * This model will be used to log activity.
-     * It should implement the Spatie\Activitylog\Contracts\Activity interface
+     * It should implement the Jobful\HistoryTracking\Contracts\HistoryTracking interface
      * and extend Illuminate\Database\Eloquent\Model.
      */
-    'activity_model' => \Spatie\Activitylog\Models\Activity::class,
+    'activity_model' => \Jobful\HistoryTracking\Models\HistoryTracking::class,
 
     /*
      * This is the name of the table that will be created by the migration and
-     * used by the Activity model shipped with this package.
+     * used by the HistoryTracking model shipped with this package.
      */
     'table_name' => 'activity_log',
 
     /*
      * This is the database connection that will be used by the migration and
-     * the Activity model shipped with this package. In case it's not set
+     * the HistoryTracking model shipped with this package. In case it's not set
      * Laravel's database.default will be used instead.
      */
-    'database_connection' => env('ACTIVITY_LOGGER_DB_CONNECTION'),
+    'database_connection' => env('HISTORY_LOGGER_DB_CONNECTION'),
 ];
