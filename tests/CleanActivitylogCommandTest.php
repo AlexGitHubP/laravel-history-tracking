@@ -6,7 +6,7 @@ use Jobful\HistoryTracking\Models\HistoryTracking;
 beforeEach(function () {
     Carbon::setTestNow(Carbon::create(2016, 1, 1, 00, 00, 00));
 
-    app()['config']->set('activitylog.delete_records_older_than_days', 31);
+    app()['config']->set('historytrack.delete_records_older_than_days', 31);
 });
 
 it('can clean the activity log', function () {

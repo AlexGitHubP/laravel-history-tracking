@@ -23,7 +23,7 @@ it('can log an activity', function () {
 });
 
 it('will not log an activity when the log is not enabled', function () {
-    config(['activitylog.enabled' => false]);
+    config(['historytrack.enabled' => false]);
 
     activity()->log($this->activityDescription);
 
@@ -31,7 +31,7 @@ it('will not log an activity when the log is not enabled', function () {
 });
 
 it('will log activity with a null log name', function () {
-    config(['activitylog.default_log_name' => null]);
+    config(['historytrack.default_log_name' => null]);
 
     activity()->log($this->activityDescription);
 
@@ -39,7 +39,7 @@ it('will log activity with a null log name', function () {
 });
 
 it('will log an activity when enabled option is null', function () {
-    config(['activitylog.enabled' => null]);
+    config(['historytrack.enabled' => null]);
 
     activity()->log($this->activityDescription);
 
@@ -49,7 +49,7 @@ it('will log an activity when enabled option is null', function () {
 it('will log to the default log by default', function () {
     activity()->log($this->activityDescription);
 
-    expect($this->getLastActivity()->log_name)->toEqual(config('activitylog.default_log_name'));
+    expect($this->getLastActivity()->log_name)->toEqual(config('historytrack.default_log_name'));
 });
 
 it('can log an activity to a specific log', function () {
@@ -119,7 +119,7 @@ it('can log an activity with a causer that has been set from other context', fun
 it('can log an activity with a causer when there is no web guard', function () {
     config(['auth.guards.web' => null]);
     config(['auth.guards.foo' => ['driver' => 'session', 'provider' => 'users']]);
-    config(['activitylog.default_auth_driver' => 'foo']);
+    config(['historytrack.default_auth_driver' => 'foo']);
 
     $user = User::first();
 
@@ -289,7 +289,7 @@ it('returns an instance of the activity log after logging when using a custom mo
 
     $activityClassName = get_class($activityClass);
 
-    app()['config']->set('activitylog.activity_model', $activityClassName);
+    app()['config']->set('historytrack.activity_model', $activityClassName);
 
     $activityModel = activity()->log('test');
 
@@ -305,7 +305,7 @@ it('will not log an activity when the log is manually disabled', function () {
 });
 
 it('will log an activity when the log is manually enabled', function () {
-    config(['activitylog.enabled' => false]);
+    config(['historytrack.enabled' => false]);
 
     activity()->enableLogging();
 

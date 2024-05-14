@@ -14,7 +14,7 @@ beforeEach(function () {
 });
 
 it('can log activity using a custom model', function () {
-    app()['config']->set('activitylog.activity_model', Activity::class);
+    app()['config']->set('historytrack.activity_model', Activity::class);
 
     $activity = activity()->log($this->activityDescription);
 
@@ -24,7 +24,7 @@ it('can log activity using a custom model', function () {
 });
 
 it('does not throw an exception when model config is null', function () {
-    app()['config']->set('activitylog.activity_model', null);
+    app()['config']->set('historytrack.activity_model', null);
 
     activity()->log($this->activityDescription);
 
@@ -32,7 +32,7 @@ it('does not throw an exception when model config is null', function () {
 });
 
 it('throws an exception when model doesnt implements activity', function () {
-    app()['config']->set('activitylog.activity_model', InvalidActivity::class);
+    app()['config']->set('historytrack.activity_model', InvalidActivity::class);
 
     $this->expectException(InvalidConfiguration::class);
 
@@ -40,7 +40,7 @@ it('throws an exception when model doesnt implements activity', function () {
 });
 
 it('throws an exception when model doesnt extend model', function () {
-    app()['config']->set('activitylog.activity_model', AnotherInvalidActivity::class);
+    app()['config']->set('historytrack.activity_model', AnotherInvalidActivity::class);
 
     $this->expectException(InvalidConfiguration::class);
 
@@ -48,7 +48,7 @@ it('throws an exception when model doesnt extend model', function () {
 });
 
 it('doesnt conlict with laravel change tracking', function () {
-    app()['config']->set('activitylog.activity_model', Activity::class);
+    app()['config']->set('historytrack.activity_model', Activity::class);
 
     $properties = [
         'attributes' => [

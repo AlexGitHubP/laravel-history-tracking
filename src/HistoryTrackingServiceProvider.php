@@ -15,13 +15,13 @@ class HistoryTrackingServiceProvider extends PackageServiceProvider
     public function configurePackage(Package $package): void
     {
         $package
-        ->name('laravel-activitylog')
-        ->hasConfigFile('activitylog')
+        ->name('laravel-historytrack')
+        ->hasConfigFile('historytrack')
         ->hasMigrations([
-            'create_activity_log_table',
-            'add_event_column_to_activity_log_table',
-            'add_batch_uuid_column_to_activity_log_table',
-            'add_history_tracking_support_to_activity_log_table'
+            'create_history_tracking_table',
+            'add_event_column_to_history_tracking_table',
+            'add_batch_uuid_column_to_history_tracking_table',
+            'add_history_tracking_support_to_history_tracking_table'
         ])
         ->hasCommand(CleanHistoryTrackingCommand::class);
 
@@ -43,7 +43,7 @@ class HistoryTrackingServiceProvider extends PackageServiceProvider
 
     public static function determineActivityModel(): string
     {
-        $activityModel = config('activitylog.activity_model') ?? ActivityModel::class;
+        $activityModel = config('historytrack.activity_model') ?? ActivityModel::class;
 
         if (! is_a($activityModel, Activity::class, true)
             || ! is_a($activityModel, Model::class, true)) {

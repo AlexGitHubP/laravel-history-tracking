@@ -32,7 +32,7 @@ abstract class TestCase extends OrchestraTestCase
 
     public function getEnvironmentSetUp($app)
     {
-        config()->set('activitylog.database_connection', 'sqlite');
+        config()->set('historytrack.database_connection', 'sqlite');
         config()->set('database.default', 'sqlite');
         config()->set('database.connections.sqlite', [
             'driver' => 'sqlite',
@@ -55,9 +55,9 @@ abstract class TestCase extends OrchestraTestCase
 
     protected function migrateActivityLogTable()
     {
-        require_once __DIR__.'/../database/migrations/create_activity_log_table.php.stub';
-        require_once __DIR__.'/../database/migrations/add_event_column_to_activity_log_table.php.stub';
-        require_once __DIR__.'/../database/migrations/add_batch_uuid_column_to_activity_log_table.php.stub';
+        require_once __DIR__.'/../database/migrations/create_history_tracking_table.php.stub';
+        require_once __DIR__.'/../database/migrations/add_event_column_to_history_tracking_table.php.stub';
+        require_once __DIR__.'/../database/migrations/add_batch_uuid_column_to_history_tracking_table.php.stub';
 
         (new CreateActivityLogTable())->up();
         (new AddEventColumnToActivityLogTable())->up();

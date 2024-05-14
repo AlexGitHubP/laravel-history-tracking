@@ -6,7 +6,7 @@ use Jobful\HistoryTracking\Test\Models\CustomTableNameOnHistoryTrackingModel;
 it('uses the table name from the configuration', function () {
     $model = new HistoryTracking();
 
-    expect(config('activitylog.table_name'))->toEqual($model->getTable());
+    expect(config('historytrack.table_name'))->toEqual($model->getTable());
 });
 
 it('uses a custom table name', function () {
@@ -15,13 +15,13 @@ it('uses a custom table name', function () {
 
     $model->setTable($newTableName);
 
-    $this->assertNotEquals($model->getTable(), config('activitylog.table_name'));
+    $this->assertNotEquals($model->getTable(), config('historytrack.table_name'));
     expect($newTableName)->toEqual($model->getTable());
 });
 
 it('uses the table name from the model', function () {
     $model = new CustomTableNameOnHistoryTrackingModel();
 
-    $this->assertNotEquals($model->getTable(), config('activitylog.table_name'));
+    $this->assertNotEquals($model->getTable(), config('historytrack.table_name'));
     expect('custom_table_name')->toEqual($model->getTable());
 });

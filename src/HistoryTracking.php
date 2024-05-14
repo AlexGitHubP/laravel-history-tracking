@@ -35,7 +35,7 @@ class HistoryTracking
 
         $this->batch = $batch;
 
-        $this->defaultLogName = $config['activitylog']['default_log_name'];
+        $this->defaultLogName = $config['historytrack']['default_log_name'];
 
         $this->logStatus = $logStatus;
     }

@@ -46,11 +46,11 @@ After clean, you might experience database table size still allocated more than 
 execute this line in MySQL to OPTIMIZE / ANALYZE table.
 
 ```bash
-OPTIMIZE TABLE activity_log;
+OPTIMIZE TABLE history_tracking;
 ```
 OR
 ```bash
-ANALYZE TABLE activity_log;
+ANALYZE TABLE history_tracking;
 ```
 
 *this SQL operation will lock write/read of database, use ONLY when server under maintanance mode.

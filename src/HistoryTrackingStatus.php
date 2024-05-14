@@ -10,7 +10,7 @@ class HistoryTrackingStatus
 
     public function __construct(Repository $config)
     {
-        $this->enabled = $config['activitylog.enabled'];
+        $this->enabled = $config['historytrack.enabled'];
     }
 
     public function enable(): bool

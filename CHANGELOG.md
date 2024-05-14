@@ -292,7 +292,7 @@ Please use `v3.14.1` instead - this release is breaking because of the new colum
 
 ## 3.7.0 - 2019-07-23
 
-- add database connection to configuration `activitylog.database_connection` and `HISTORY_LOGGER_DB_CONNECTION` env var [#568](https://github.com/spatie/laravel-activitylog/pull/568)
+- add database connection to configuration `historytrack.database_connection` and `HISTORY_LOGGER_DB_CONNECTION` env var [#568](https://github.com/spatie/laravel-activitylog/pull/568)
 
 ## 3.6.3 - 2019-07-23
 

@@ -137,7 +137,7 @@ trait LogsActivity
             return $this->activitylogOptions->logName;
         }
 
-        return config('activitylog.default_log_name');
+        return config('historytrack.default_log_name');
     }
 
     /**

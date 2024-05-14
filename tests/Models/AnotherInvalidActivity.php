@@ -21,12 +21,12 @@ class AnotherInvalidActivity implements ActivityContract
 
     public function __construct(array $attributes = [])
     {
-        $this->table = config('activitylog.table_name');
+        $this->table = config('historytrack.table_name');
     }
 
     public function subject(): MorphTo
     {
-        if (config('activitylog.subject_returns_soft_deleted_models')) {
+        if (config('historytrack.subject_returns_soft_deleted_models')) {
             return $this->morphTo()->withTrashed();
         }
 

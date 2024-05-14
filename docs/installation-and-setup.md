@@ -21,7 +21,7 @@ You can publish the migration with:
 php artisan vendor:publish --provider="Jobful\HistoryTracking\ActivitylogServiceProvider" --tag="activitylog-migrations"
 ```
 
-After the migration has been published you can create the `activity_log` table by running the migrations:
+After the migration has been published you can create the `history_tracking` table by running the migrations:
 
 ```bash
 php artisan migrate
@@ -30,7 +30,7 @@ php artisan migrate
 You can optionally publish the config file with:
 
 ```bash
-php artisan vendor:publish --provider="Jobful\HistoryTracking\ActivitylogServiceProvider" --tag="activitylog-config"
+php artisan vendor:publish --provider="Jobful\HistoryTracking\ActivitylogServiceProvider" --tag="historytrack-config"
 ```
 
 This is the contents of the published config file:
@@ -77,6 +77,6 @@ return [
      * This is the name of the table that will be created by the migration and
      * used by the HistoryTracking model shipped with this package.
      */
-    'table_name' => 'activity_log',
+    'table_name' => 'history_tracking',
 ];
 ```

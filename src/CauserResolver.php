@@ -22,7 +22,7 @@ class CauserResolver
     {
         $this->authManager = $authManager;
 
-        $this->authDriver = $config['activitylog']['default_auth_driver'];
+        $this->authDriver = $config['historytrack']['default_auth_driver'];
     }
 
     public function resolve(Model | int | string | null $subject = null): ?Model

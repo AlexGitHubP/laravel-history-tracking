@@ -6,7 +6,7 @@ use Jobful\HistoryTracking\HistoryTrackingStatus;
 if (! function_exists('historyTracking')) {
     function historyTracking(string $logName = null): HistoryTracking
     {
-        $defaultLogName = config('activitylog.default_log_name');
+        $defaultLogName = config('historytrack.default_log_name');
 
         $logStatus = app(HistoryTrackingStatus::class);
 
