@@ -37,7 +37,7 @@ class CleanHistoryTrackingCommand extends Command
         $amountDeleted = $activity::query()
             ->where('created_at', '<', $cutOffDate)
             ->when($log !== null, function (Builder $query) use ($log) {
-                $query->inLog($log);
+                $query->inTrackerType($log);
             })
             ->delete();
 

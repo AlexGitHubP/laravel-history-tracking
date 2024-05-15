@@ -6,7 +6,7 @@ use Closure;
 
 class HistoryTrackingOptions
 {
-    public ?string $logName = null;
+    public ?int $trackerType = null;
 
     public bool $submitEmptyLogs = true;
 
@@ -137,9 +137,9 @@ class HistoryTrackingOptions
     /**
      * Customize log name.
      */
-    public function useLogName(?string $logName): self
+    public function useTrackerType(?string $trackerType): self
     {
-        $this->logName = $logName;
+        $this->trackerType = $trackerType;
 
         return $this;
     }

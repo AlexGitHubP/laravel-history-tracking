@@ -19,9 +19,6 @@ class HistoryTrackingServiceProvider extends PackageServiceProvider
         ->hasConfigFile('historytrack')
         ->hasMigrations([
             'create_history_tracking_table',
-            'add_event_column_to_history_tracking_table',
-            'add_batch_uuid_column_to_history_tracking_table',
-            'add_history_tracking_support_to_history_tracking_table'
         ])
         ->hasCommand(CleanHistoryTrackingCommand::class)
         ->hasCommand(PublishPredefinedEventsCommand::class);

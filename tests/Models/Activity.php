@@ -56,7 +56,7 @@ class Activity extends Model implements ActivityContract
         }, ARRAY_FILTER_USE_KEY));
     }
 
-    public function scopeInLog(Builder $query, ...$logNames): Builder
+    public function scopeInType(Builder $query, ...$logNames): Builder
     {
         if (is_array($logNames[0])) {
             $logNames = $logNames[0];

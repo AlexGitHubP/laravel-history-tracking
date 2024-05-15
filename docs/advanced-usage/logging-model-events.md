@@ -174,7 +174,7 @@ class NewsItem extends Model
     public function getActivitylogOptions()
     {
         return HistoryTrackingOptions::defaults()
-        ->useLogName('system');
+        ->useTrackerType('system');
     }
 }
 ```

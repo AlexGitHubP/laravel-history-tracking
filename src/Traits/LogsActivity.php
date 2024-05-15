@@ -55,7 +55,7 @@ trait LogsActivity
 
                 $description = $model->getDescriptionForEvent($eventName);
 
-                $logName = $model->getLogNameToUse();
+                $trackerType = $model->getTrackerTypeToUse();
 
                 // Submitting empty description will cause place holder replacer to fail.
                 if ($description == '') {
@@ -76,7 +76,7 @@ trait LogsActivity
 
                 // Actual logging
                 $logger = app(HistoryTracking::class)
-                    ->useLog($logName)
+                    ->useTrackerType($trackerType)
                     ->event($eventName)
                     ->performedOn($model)
                     ->withProperties($event->changes);
@@ -131,13 +131,13 @@ trait LogsActivity
         return $eventName;
     }
 
-    public function getLogNameToUse(): ?string
+    public function getTrackerTypeToUse(): ?string
     {
-        if (! empty($this->activitylogOptions->logName)) {
-            return $this->activitylogOptions->logName;
+        if (! empty($this->activitylogOptions->trackerType)) {
+            return $this->activitylogOptions->trackerType;
         }
 
-        return config('historytrack.default_log_name');
+        return config('historytrack.default_tracker_type');
     }
 
     /**

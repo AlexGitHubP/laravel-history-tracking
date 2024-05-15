@@ -13,14 +13,13 @@ use Jobful\HistoryTracking\Contracts\Activity as ActivityContract;
  * Jobful\History\Models\History.
  *
  * @property int $id
- * @property string|null $log_name
+ * @property int|null $trackerType
  * @property string $description
  * @property string|null $subject_type
  * @property int|null $subject_id
  * @property string|null $causer_type
  * @property int|null $causer_id
  * @property string|null $event
- * @property string|null $batch_uuid
  * @property \Illuminate\Support\Collection|null $properties
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
@@ -33,7 +32,7 @@ use Jobful\HistoryTracking\Contracts\Activity as ActivityContract;
  * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\History forEvent(string $event)
  * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\History forSubject(\Illuminate\Database\Eloquent\Model $subject)
  * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\History hasBatch()
- * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\History inLog($logNames)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\History inTrackerType($trackerType)
  * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\History newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\History newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\History query()
@@ -76,7 +75,7 @@ class History extends Model implements ActivityContract
         return $this->morphTo();
     }
 
-    public function event(): MorphTo
+    public function trackable(): MorphTo
     {
         return $this->morphTo();
     }
@@ -100,13 +99,13 @@ class History extends Model implements ActivityContract
         return $this->changes();
     }
 
-    public function scopeInLog(Builder $query, ...$logNames): Builder
+    public function scopeInType(Builder $query, ...$trackerTypes): Builder
     {
-        if (is_array($logNames[0])) {
-            $logNames = $logNames[0];
+        if (is_array($trackerTypes[0])) {
+            $trackerTypes = $trackerTypes[0];
         }
 
-        return $query->whereIn('log_name', $logNames);
+        return $query->whereIn('tracker_type', $trackerTypes);
     }
 
     public function scopeCausedBy(Builder $query, Model $causer): Builder
@@ -126,15 +125,5 @@ class History extends Model implements ActivityContract
     public function scopeForEvent(Builder $query, string $event): Builder
     {
         return $query->where('event', $event);
-    }
-
-    public function scopeHasBatch(Builder $query): Builder
-    {
-        return $query->whereNotNull('batch_uuid');
-    }
-
-    public function scopeForBatch(Builder $query, string $batchUuid): Builder
-    {
-        return $query->where('batch_uuid', $batchUuid);
     }
 }

@@ -13,13 +13,13 @@ interface Activity
 
     public function causer(): MorphTo;
 
-    public function event(): MorphTo;
+    public function trackable(): MorphTo;
 
     public function getExtraProperty(string $propertyName, mixed $defaultValue): mixed;
 
     public function changes(): Collection;
 
-    public function scopeInLog(Builder $query, ...$logNames): Builder;
+    public function scopeInType(Builder $query, ...$trackerTypes): Builder;
 
     public function scopeCausedBy(Builder $query, Model $causer): Builder;
 

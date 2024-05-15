@@ -17,7 +17,7 @@ class HistoryTracking
     use Conditionable;
     use Macroable;
 
-    protected ?string $defaultLogName = null;
+    protected ?int $defaultTrackerType = null;
 
     protected CauserResolver $causerResolver;
 
@@ -33,7 +33,7 @@ class HistoryTracking
 
         $this->batch = $batch;
 
-        $this->defaultLogName = $config['historytrack']['default_log_name'];
+        $this->defaultTrackerType = $config['historytrack']['default_tracker_type'];
 
         $this->logStatus = $logStatus;
     }
@@ -70,7 +70,7 @@ class HistoryTracking
         return $this;
     }
 
-    public function eventType(Model | int | string | null $modelOrId): static
+    public function trackedBy(Model | int | string | null $modelOrId): static
     {
         if ($modelOrId === null) {
             return $this;
@@ -78,7 +78,7 @@ class HistoryTracking
 
         $model = $this->causerResolver->resolve($modelOrId);
 
-        $this->getActivity()->event()->associate($model);
+        $this->getActivity()->trackable()->associate($model);
 
         return $this;
     }
@@ -134,9 +134,9 @@ class HistoryTracking
         return $this;
     }
 
-    public function useLog(?string $logName): static
+    public function useTrackerType(?string $trackerType): static
     {
-        $this->getActivity()->log_name = $logName;
+        $this->getActivity()->tracker_type = $trackerType;
 
         return $this;
     }
@@ -162,9 +162,9 @@ class HistoryTracking
         return $this;
     }
 
-    public function inLog(?string $logName): static
+    public function inTrackerType(?string $trackerType): static
     {
-        return $this->useLog($logName);
+        return $this->useTrackerType($trackerType);
     }
 
     public function tap(callable $callback, string $eventName = null): static
@@ -255,11 +255,9 @@ class HistoryTracking
         if (! $this->activity instanceof ActivityContract) {
             $this->activity = HistoryTrackingServiceProvider::getActivityModelInstance();
             $this
-                ->useLog($this->defaultLogName)
+                ->useTrackerType($this->defaultTrackerType)
                 ->withProperties([])
                 ->causedBy($this->causerResolver->resolve());
-
-            $this->activity->batch_uuid = $this->batch->getUuid();
         }
 
         return $this->activity;
