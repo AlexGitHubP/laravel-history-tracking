@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
 use Jobful\HistoryTracking\Contracts\Activity as ActivityContract;
 
 /**
- * Jobful\HistoryTracking\Models\HistoryTracking.
+ * Jobful\History\Models\History.
  *
  * @property int $id
  * @property string|null $log_name
@@ -28,18 +28,21 @@ use Jobful\HistoryTracking\Contracts\Activity as ActivityContract;
  * @property-read \Illuminate\Support\Collection $changes
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $subject
  *
- * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\HistoryTracking causedBy(\Illuminate\Database\Eloquent\Model $causer)
- * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\HistoryTracking forBatch(string $batchUuid)
- * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\HistoryTracking forEvent(string $event)
- * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\HistoryTracking forSubject(\Illuminate\Database\Eloquent\Model $subject)
- * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\HistoryTracking hasBatch()
- * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\HistoryTracking inLog($logNames)
- * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\HistoryTracking newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\HistoryTracking newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\HistoryTracking query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\History causedBy(\Illuminate\Database\Eloquent\Model $causer)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\History forBatch(string $batchUuid)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\History forEvent(string $event)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\History forSubject(\Illuminate\Database\Eloquent\Model $subject)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\History hasBatch()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\History inLog($logNames)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\History newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\History newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Jobful\HistoryTracking\Models\History query()
  */
-class HistoryTracking extends Model implements ActivityContract
+class History extends Model implements ActivityContract
 {
+    const TYPE_AUTOMATED = 1;
+    const TYPE_MANUAL = 2;
+
     public $guarded = [];
 
     protected $casts = [
@@ -69,6 +72,11 @@ class HistoryTracking extends Model implements ActivityContract
     }
 
     public function causer(): MorphTo
+    {
+        return $this->morphTo();
+    }
+
+    public function event(): MorphTo
     {
         return $this->morphTo();
     }

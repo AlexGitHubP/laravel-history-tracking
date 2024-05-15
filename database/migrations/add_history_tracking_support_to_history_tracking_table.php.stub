@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::connection(config('historytrack.database_connection'))->table(config('historytrack.table_name'), function (Blueprint $table) {
-            $table->enum('type', array('activity_tracking', 'history_tracking'))->nullable()->after('properties');
-            $table->integer('owner')->unsigned()->nullable()->index()->after('type');
+            $table->nullableMorphs('event', 'event');
+            $table->integer('owner')->unsigned()->nullable()->index()->after('event');
             $table->dateTime('performed_at')->nullable()->after('batch_uuid');
         });
     }
@@ -24,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::connection(config('historytrack.database_connection'))->table(config('historytrack.table_name'), function (Blueprint $table) {
-            $table->dropColumn('type');
+            $table->dropMorphs('subject', 'subject');
             $table->dropColumn('owner');
             $table->dropColumn('performed_on');
         });

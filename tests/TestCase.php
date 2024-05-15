@@ -10,7 +10,7 @@ use Illuminate\Encryption\Encrypter;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use Jobful\HistoryTracking\HistoryTrackingServiceProvider;
-use Jobful\HistoryTracking\Models\HistoryTracking;
+use Jobful\HistoryTracking\Models\History;
 use Jobful\HistoryTracking\Test\Models\Article;
 use Jobful\HistoryTracking\Test\Models\User;
 
@@ -95,9 +95,9 @@ abstract class TestCase extends OrchestraTestCase
         });
     }
 
-    public function getLastActivity(): ?HistoryTracking
+    public function getLastActivity(): ?History
     {
-        return HistoryTracking::all()->last();
+        return History::all()->last();
     }
 
     public function markTestAsPassed(): void

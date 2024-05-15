@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Jobful\HistoryTracking\Contracts\Activity;
 use Jobful\HistoryTracking\Contracts\Activity as ActivityContract;
 use Jobful\HistoryTracking\Exceptions\InvalidConfiguration;
-use Jobful\HistoryTracking\Models\HistoryTracking as ActivityModel;
+use Jobful\HistoryTracking\Models\History as ActivityModel;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -23,10 +23,11 @@ class HistoryTrackingServiceProvider extends PackageServiceProvider
             'add_batch_uuid_column_to_history_tracking_table',
             'add_history_tracking_support_to_history_tracking_table'
         ])
-        ->hasCommand(CleanHistoryTrackingCommand::class);
+        ->hasCommand(CleanHistoryTrackingCommand::class)
+        ->hasCommand(PublishPredefinedEventsCommand::class);
 
         $this->publishes([
-            __DIR__.'/Models/PredefinedEvents.php' => app_path('Models/TestModel.php'),
+            __DIR__.'/Models/PredefinedEvents.php' => app_path('Models/PredefinedEvents.php'),
         ], 'history-tracking-models');
     }
 

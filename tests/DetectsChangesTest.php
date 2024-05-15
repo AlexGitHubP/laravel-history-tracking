@@ -8,7 +8,7 @@ use Jobful\HistoryTracking\Contracts\LoggablePipe;
 use Jobful\HistoryTracking\EventLogBag;
 use Jobful\HistoryTracking\LogBatch;
 use Jobful\HistoryTracking\HistoryTrackingOptions;
-use Jobful\HistoryTracking\Models\HistoryTracking;
+use Jobful\HistoryTracking\Models\History;
 use Jobful\HistoryTracking\Test\Casts\IntervalCasts;
 use Jobful\HistoryTracking\Test\Models\Article;
 use Jobful\HistoryTracking\Test\Models\User;
@@ -25,7 +25,7 @@ beforeEach(function () {
         }
     };
 
-    $this->assertCount(0, HistoryTracking::all());
+    $this->assertCount(0, History::all());
 });
 
 it('can store the values when creating a model', function () {
@@ -276,7 +276,7 @@ it('retruns same uuid for all log changes under one batch', function () {
 
     app(LogBatch::class)->endBatch();
 
-    $this->assertTrue(HistoryTracking::pluck('batch_uuid')->every(fn ($uuid) => $uuid === $batchUuid));
+    $this->assertTrue(History::pluck('batch_uuid')->every(fn ($uuid) => $uuid === $batchUuid));
 });
 
 it('assigns new uuid for multiple change logs in different batches', function () {
@@ -306,7 +306,7 @@ it('assigns new uuid for multiple change logs in different batches', function ()
 
     app(LogBatch::class)->endBatch();
 
-    $this->assertTrue(HistoryTracking::pluck('batch_uuid')->every(fn ($uuid) => $uuid === $uuidForCreatedEvent));
+    $this->assertTrue(History::pluck('batch_uuid')->every(fn ($uuid) => $uuid === $uuidForCreatedEvent));
 
     app(LogBatch::class)->startBatch();
 
@@ -317,9 +317,9 @@ it('assigns new uuid for multiple change logs in different batches', function ()
 
     app(LogBatch::class)->endBatch();
 
-    $this->assertCount(1, HistoryTracking::where('description', 'updated')->get());
+    $this->assertCount(1, History::where('description', 'updated')->get());
 
-    $this->assertEquals($uuidForUpdatedEvents, HistoryTracking::where('description', 'updated')->first()->batch_uuid);
+    $this->assertEquals($uuidForUpdatedEvents, History::where('description', 'updated')->first()->batch_uuid);
 
     app(LogBatch::class)->startBatch();
     $article->delete();
@@ -329,7 +329,7 @@ it('assigns new uuid for multiple change logs in different batches', function ()
 
     app(LogBatch::class)->endBatch();
 
-    $this->assertCount(2, HistoryTracking::where('batch_uuid', $uuidForDeletedEvents)->get());
+    $this->assertCount(2, History::where('batch_uuid', $uuidForDeletedEvents)->get());
 
     $this->assertNotSame($uuidForCreatedEvent, $uuidForDeletedEvents);
 });

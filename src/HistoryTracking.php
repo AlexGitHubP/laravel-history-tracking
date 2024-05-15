@@ -19,8 +19,6 @@ class HistoryTracking
 
     protected ?string $defaultLogName = null;
 
-    protected ?string $defaultTrackingType = 'activity_tracking';
-
     protected CauserResolver $causerResolver;
 
     protected HistoryTrackingStatus $logStatus;
@@ -68,6 +66,19 @@ class HistoryTracking
         $model = $this->causerResolver->resolve($modelOrId);
 
         $this->getActivity()->causer()->associate($model);
+
+        return $this;
+    }
+
+    public function eventType(Model | int | string | null $modelOrId): static
+    {
+        if ($modelOrId === null) {
+            return $this;
+        }
+
+        $model = $this->causerResolver->resolve($modelOrId);
+
+        $this->getActivity()->event()->associate($model);
 
         return $this;
     }
@@ -144,12 +155,6 @@ class HistoryTracking
         return $this;
     }
 
-    public function useType(?string $trackingType): static
-    {
-        $this->getActivity()->type = $trackingType;
-
-        return $this;
-    }
     public function performedAt(DateTimeInterface $dateTime): static
     {
         $this->getActivity()->performed_at = Carbon::instance($dateTime);
@@ -251,7 +256,6 @@ class HistoryTracking
             $this->activity = HistoryTrackingServiceProvider::getActivityModelInstance();
             $this
                 ->useLog($this->defaultLogName)
-                ->useType($this->defaultTrackingType)
                 ->withProperties([])
                 ->causedBy($this->causerResolver->resolve());
 

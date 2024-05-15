@@ -37,20 +37,20 @@ return [
 
     /*
      * This model will be used to log activity.
-     * It should implement the Jobful\HistoryTracking\Contracts\HistoryTracking interface
+     * It should implement the Jobful\History\Contracts\History interface
      * and extend Illuminate\Database\Eloquent\Model.
      */
-    'activity_model' => \Jobful\HistoryTracking\Models\HistoryTracking::class,
+    'activity_model' => \Jobful\HistoryTracking\Models\History::class,
 
     /*
      * This is the name of the table that will be created by the migration and
-     * used by the HistoryTracking model shipped with this package.
+     * used by the History model shipped with this package.
      */
     'table_name' => 'history_tracking',
 
     /*
      * This is the database connection that will be used by the migration and
-     * the HistoryTracking model shipped with this package. In case it's not set
+     * the History model shipped with this package. In case it's not set
      * Laravel's database.default will be used instead.
      */
     'database_connection' => env('HISTORY_LOGGER_DB_CONNECTION'),

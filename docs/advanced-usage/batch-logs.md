@@ -13,7 +13,7 @@ Here's an example:
 
 ```php
 use Jobful\HistoryTracking\Facades\LogBatch;
-use Jobful\HistoryTracking\Models\HistoryTracking;
+use Jobful\HistoryTracking\Models\History;
 
 LogBatch::startBatch();
 $author = Author::create(['name' => 'Philip K. Dick']);
@@ -45,7 +45,7 @@ Example results:
 
 ```php
 use Jobful\HistoryTracking\Facades\LogBatch;
-use Jobful\HistoryTracking\Models\HistoryTracking;
+use Jobful\HistoryTracking\Models\History;
 
 LogBatch::startBatch();
 
@@ -59,8 +59,8 @@ $author->delete();
 $batchUuid = LogBatch::getUuid(); // save batch id to retrieve activities later
 LogBatch::endBatch();
 
-$batchActivities = HistoryTracking::forBatch($batchUuid)->get();
-var_dump($batchActivities); // A collection of HistoryTracking models...
+$batchActivities = History::forBatch($batchUuid)->get();
+var_dump($batchActivities); // A collection of History models...
 // They will be in order: Author;created, Book;created, Book;updated,
 //      Book;created, Author;deleted, Book;deleted and Book;deleted
 ```

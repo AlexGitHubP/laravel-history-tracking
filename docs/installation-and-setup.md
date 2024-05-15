@@ -68,14 +68,14 @@ return [
 
     /*
      * This model will be used to log activity.
-     * It should be implements the Jobful\HistoryTracking\Contracts\HistoryTracking interface
+     * It should be implements the Jobful\History\Contracts\History interface
      * and extend Illuminate\Database\Eloquent\Model.
      */
-    'activity_model' => \Jobful\HistoryTracking\Models\HistoryTracking::class,
+    'activity_model' => \Jobful\HistoryTracking\Models\History::class,
 
     /*
      * This is the name of the table that will be created by the migration and
-     * used by the HistoryTracking model shipped with this package.
+     * used by the History model shipped with this package.
      */
     'table_name' => 'history_tracking',
 ];

@@ -13,6 +13,8 @@ interface Activity
 
     public function causer(): MorphTo;
 
+    public function event(): MorphTo;
+
     public function getExtraProperty(string $propertyName, mixed $defaultValue): mixed;
 
     public function changes(): Collection;

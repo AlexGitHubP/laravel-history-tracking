@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Jobful\HistoryTracking\Models\HistoryTracking;
+use Jobful\HistoryTracking\Models\History;
 use Jobful\HistoryTracking\Test\Models\Article;
 use Jobful\HistoryTracking\Test\Models\User;
 
@@ -13,7 +13,7 @@ beforeEach(function () {
 });
 
 it('provides a scope to get activities from a specific log', function () {
-    $activityInLog3 = HistoryTracking::inLog('log3')->get();
+    $activityInLog3 = History::inLog('log3')->get();
 
     expect($activityInLog3)->toHaveCount(1);
 
@@ -21,7 +21,7 @@ it('provides a scope to get activities from a specific log', function () {
 });
 
 it('provides a scope to get log items from multiple logs', function () {
-    $activity = HistoryTracking::inLog('log2', 'log4')->get();
+    $activity = History::inLog('log2', 'log4')->get();
 
     expect($activity)->toHaveCount(2);
 
@@ -30,7 +30,7 @@ it('provides a scope to get log items from multiple logs', function () {
 });
 
 it('provides a scope to get log items from multiple logs using an array', function () {
-    $activity = HistoryTracking::inLog(['log1', 'log2'])->get();
+    $activity = History::inLog(['log1', 'log2'])->get();
 
     expect($activity)->toHaveCount(2);
 
@@ -47,7 +47,7 @@ it('provides a scope to get log items for a specific causer', function () {
         'name' => 'Another User',
     ]))->log('Bar');
 
-    $activities = HistoryTracking::causedBy($causer)->get();
+    $activities = History::causedBy($causer)->get();
 
     expect($activities)->toHaveCount(1);
     expect($activities->first()->causer_id)->toEqual($causer->getKey());
@@ -61,7 +61,7 @@ it('provides a scope to get log items for a specific event', function () {
         ->on($subject)
         ->event('create')
         ->log('Foo');
-    $activities = HistoryTracking::forEvent('create')->get();
+    $activities = History::forEvent('create')->get();
     expect($activities)->toHaveCount(1);
     expect($activities->first()->event)->toEqual('create');
 });
@@ -75,7 +75,7 @@ it('provides a scope to get log items for a specific subject', function () {
         'name' => 'Another article',
     ]))->by($causer)->log('Bar');
 
-    $activities = HistoryTracking::forSubject($subject)->get();
+    $activities = History::forSubject($subject)->get();
 
     expect($activities)->toHaveCount(1);
     expect($activities->first()->subject_id)->toEqual($subject->getKey());
@@ -97,7 +97,7 @@ it('provides a scope to get log items for a specific morphmapped causer', functi
         'name' => 'Another User',
     ]))->log('Bar');
 
-    $activities = HistoryTracking::causedBy($causer)->get();
+    $activities = History::causedBy($causer)->get();
 
     expect($activities)->toHaveCount(1);
     expect($activities->first()->causer_id)->toEqual($causer->getKey());
@@ -121,7 +121,7 @@ it('provides a scope to get log items for a specific morphmapped subject', funct
         'name' => 'Another article',
     ]))->by($causer)->log('Bar');
 
-    $activities = HistoryTracking::forSubject($subject)->get();
+    $activities = History::forSubject($subject)->get();
 
     expect($activities)->toHaveCount(1);
     expect($activities->first()->subject_id)->toEqual($subject->getKey());
