@@ -5,17 +5,17 @@ namespace Jobful\HistoryTracking;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 
-class PublishPredefinedEventsCommand extends Command
+class PublishEventsCommand extends Command
 {
 
     protected $signature = 'jobful:publish-model';
-    protected $description = 'Publish predefined history tracking events';
+    protected $description = 'Publish history tracking events';
 
     public function handle()
     {
-        $source = __DIR__ . '/Models/PredefinedEvents.php';
+        $source = __DIR__ . '/Models/HistoryTrackingEvents.php';
         $destinationDir = app_path('Models/HistoryTracking');
-        $destination = $destinationDir . '/PredefinedEvents.php';
+        $destination = $destinationDir . '/HistoryTrackingEvents.php';
 
         if (!File::exists($destinationDir)) {
             File::makeDirectory($destinationDir, 0755, true);

@@ -42,6 +42,15 @@ class History extends Model implements ActivityContract
     const TYPE_AUTOMATED = 1;
     const TYPE_MANUAL = 2;
 
+
+    public static function type(): array
+    {
+        return [
+            self::TYPE_AUTOMATED => __('Automatic'),
+            self::TYPE_MANUAL => __('Manual'),
+        ];
+    }
+
     public $guarded = [];
 
     protected $casts = [

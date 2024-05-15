@@ -4,14 +4,14 @@ namespace Jobful\HistoryTracking\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PredefinedEvents extends Model
+class HistoryTrackingEvents extends Model
 {
     /**
      * Predefined system constants - has no owner
      */
-    CONST PREDEFINED_CREATED_ACCOUNT = 'user_created_account';
-    CONST PREDEFINED_ONBOARD_COMPLETE = 'user_completed_onboarding';
-    CONST PREDEFINED_UPLOADED_CV = 'user_uploaded_cv';
+    CONST PREDEFINED_SYSTEM_CREATED_ACCOUNT = 'user_created_account';
+    CONST PREDEFINED_SYSTEM_ONBOARD_COMPLETE = 'user_completed_onboarding';
+    CONST PREDEFINED_SYSTEM_UPLOADED_CV = 'user_uploaded_cv';
 
     /**
      * Predefined job constants - has owner

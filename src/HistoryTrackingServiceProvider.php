@@ -19,13 +19,11 @@ class HistoryTrackingServiceProvider extends PackageServiceProvider
         ->hasConfigFile('historytrack')
         ->hasMigrations([
             'create_history_tracking_table',
+            'create_history_tracking_events_table',
         ])
         ->hasCommand(CleanHistoryTrackingCommand::class)
-        ->hasCommand(PublishPredefinedEventsCommand::class);
+        ->hasCommand(PublishEventsCommand::class);
 
-        $this->publishes([
-            __DIR__.'/Models/PredefinedEvents.php' => app_path('Models/PredefinedEvents.php'),
-        ], 'history-tracking-models');
     }
 
     public function registeringPackage()
