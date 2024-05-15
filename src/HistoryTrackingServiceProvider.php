@@ -41,7 +41,7 @@ class HistoryTrackingServiceProvider extends PackageServiceProvider
 
     public static function determineActivityModel(): string
     {
-        $activityModel = config('historytrack.activity_model') ?? ActivityModel::class;
+        $activityModel = config('historytrack.history_model') ?? ActivityModel::class;
 
         if (! is_a($activityModel, Activity::class, true)
             || ! is_a($activityModel, Model::class, true)) {
