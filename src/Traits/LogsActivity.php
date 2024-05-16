@@ -137,7 +137,7 @@ trait LogsActivity
             return $this->activitylogOptions->trackerType;
         }
 
-        return config('historytrack.default_tracker_type');
+        return config('history-tracking.default_tracker_type');
     }
 
     /**

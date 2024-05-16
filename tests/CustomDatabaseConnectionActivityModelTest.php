@@ -6,7 +6,7 @@ use Jobful\HistoryTracking\Test\Models\CustomDatabaseConnectionOnHistoryModel;
 it('uses the database connection from the configuration', function () {
     $model = new History();
 
-    expect(config('historytrack.database_connection'))->toEqual($model->getConnectionName());
+    expect(config('history-tracking.database_connection'))->toEqual($model->getConnectionName());
 });
 
 it('uses a custom database connection', function () {
@@ -14,12 +14,12 @@ it('uses a custom database connection', function () {
 
     $model->setConnection('custom_sqlite');
 
-    $this->assertNotEquals($model->getConnectionName(), config('historytrack.database_connection'));
+    $this->assertNotEquals($model->getConnectionName(), config('history-tracking.database_connection'));
     expect('custom_sqlite')->toEqual($model->getConnectionName());
 });
 
 it('uses the default database connection when the one from configuration is null', function () {
-    app()['config']->set('historytrack.database_connection', null);
+    app()['config']->set('history-tracking.database_connection', null);
 
     $model = new History();
 
@@ -29,6 +29,6 @@ it('uses the default database connection when the one from configuration is null
 it('uses the database connection from model', function () {
     $model = new CustomDatabaseConnectionOnHistoryModel();
 
-    $this->assertNotEquals($model->getConnectionName(), config('historytrack.database_connection'));
+    $this->assertNotEquals($model->getConnectionName(), config('history-tracking.database_connection'));
     expect('custom_connection_name')->toEqual($model->getConnectionName());
 });

@@ -22,7 +22,7 @@ return [
      * If no log name is passed to the activity() helper
      * we use this default log name.
      */
-    'default_tracker_type' => \Jobful\HistoryTracking\Models\History::TYPE_AUTOMATED,
+    'default_tracker_type' => \Jobful\HistoryTracking\Models\HistoryTrackingEvents::TYPE_AUTOMATIC,
 
     /*
      * You can specify an auth driver here that gets user models.

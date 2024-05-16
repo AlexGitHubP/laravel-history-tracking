@@ -39,17 +39,6 @@ use Jobful\HistoryTracking\Contracts\Activity as ActivityContract;
  */
 class History extends Model implements ActivityContract
 {
-    const TYPE_AUTOMATED = 1;
-    const TYPE_MANUAL = 2;
-
-
-    public static function type(): array
-    {
-        return [
-            self::TYPE_AUTOMATED => __('Automatic'),
-            self::TYPE_MANUAL => __('Manual'),
-        ];
-    }
 
     public $guarded = [];
 
@@ -60,11 +49,11 @@ class History extends Model implements ActivityContract
     public function __construct(array $attributes = [])
     {
         if (! isset($this->connection)) {
-            $this->setConnection(config('historytrack.database_connection'));
+            $this->setConnection(config('history-tracking.database_connection'));
         }
 
         if (! isset($this->table)) {
-            $this->setTable(config('historytrack.table_name'));
+            $this->setTable(config('history-tracking.table_name'));
         }
 
         parent::__construct($attributes);
@@ -72,7 +61,7 @@ class History extends Model implements ActivityContract
 
     public function subject(): MorphTo
     {
-        if (config('historytrack.subject_returns_soft_deleted_models')) {
+        if (config('history-tracking.subject_returns_soft_deleted_models')) {
             return $this->morphTo()->withTrashed();
         }
 

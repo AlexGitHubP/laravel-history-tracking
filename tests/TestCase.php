@@ -32,7 +32,7 @@ abstract class TestCase extends OrchestraTestCase
 
     public function getEnvironmentSetUp($app)
     {
-        config()->set('historytrack.database_connection', 'sqlite');
+        config()->set('history-tracking.database_connection', 'sqlite');
         config()->set('database.default', 'sqlite');
         config()->set('database.connections.sqlite', [
             'driver' => 'sqlite',

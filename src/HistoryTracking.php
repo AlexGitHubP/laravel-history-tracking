@@ -33,7 +33,7 @@ class HistoryTracking
 
         $this->batch = $batch;
 
-        $this->defaultTrackerType = $config['historytrack']['default_tracker_type'];
+        $this->defaultTrackerType = $config['history-tracking']['default_tracker_type'];
 
         $this->logStatus = $logStatus;
     }

@@ -2,10 +2,10 @@
 
 # Log activity inside your Laravel app
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-historytrack.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-activitylog)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-history-tracking.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-activitylog)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/spatie/laravel-activitylog/run-tests.yml?branch=main&label=Tests)](https://github.com/spatie/laravel-activitylog/actions/workflows/run-tests.yml)
 [![Check & fix styling](https://github.com/spatie/laravel-activitylog/workflows/Check%20&%20fix%20styling/badge.svg)](https://github.com/spatie/laravel-activitylog/actions/workflows/php-cs-fixer.yml)
-[![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-historytrack.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-activitylog)
+[![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-history-tracking.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-activitylog)
 
 A custom history tracking system for users + reporting, based on the https://github.com/spatie/laravel-activitylog package.
 The Package stores all activity in the `history_tracking` table.
@@ -69,7 +69,7 @@ Calling `$activity->changes()` will return this array:
 
 ## Support us
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-historytrack.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-activitylog)
+[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-history-tracking.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-activitylog)
 
 We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
 

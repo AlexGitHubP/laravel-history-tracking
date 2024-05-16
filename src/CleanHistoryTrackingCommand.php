@@ -28,7 +28,7 @@ class CleanHistoryTrackingCommand extends Command
 
         $log = $this->argument('log');
 
-        $maxAgeInDays = $this->option('days') ?? config('historytrack.delete_records_older_than_days');
+        $maxAgeInDays = $this->option('days') ?? config('history-tracking.delete_records_older_than_days');
 
         $cutOffDate = Carbon::now()->subDays($maxAgeInDays)->format('Y-m-d H:i:s');
 

@@ -7,6 +7,7 @@ use Jobful\HistoryTracking\Contracts\Activity;
 use Jobful\HistoryTracking\Contracts\Activity as ActivityContract;
 use Jobful\HistoryTracking\Exceptions\InvalidConfiguration;
 use Jobful\HistoryTracking\Models\History as ActivityModel;
+use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -15,14 +16,21 @@ class HistoryTrackingServiceProvider extends PackageServiceProvider
     public function configurePackage(Package $package): void
     {
         $package
-        ->name('laravel-historytrack')
-        ->hasConfigFile('historytrack')
+        ->name('laravel-history-tracking')
+        ->hasConfigFile('history-tracking')
         ->hasMigrations([
             'create_history_tracking_table',
             'create_history_tracking_events_table',
+            'create_history_tracking_custom_events_table',
         ])
         ->hasCommand(CleanHistoryTrackingCommand::class)
-        ->hasCommand(PublishEventsCommand::class);
+        ->hasCommand(PublishHistoryTrackingModels::class)
+        ->hasInstallCommand(function (InstallCommand $command){
+            $command
+                ->publishConfigFile()
+                ->publishMigrations();
+        });
+
 
     }
 
@@ -39,7 +47,7 @@ class HistoryTrackingServiceProvider extends PackageServiceProvider
 
     public static function determineActivityModel(): string
     {
-        $activityModel = config('historytrack.history_model') ?? ActivityModel::class;
+        $activityModel = config('history-tracking.history_model') ?? ActivityModel::class;
 
         if (! is_a($activityModel, Activity::class, true)
             || ! is_a($activityModel, Model::class, true)) {

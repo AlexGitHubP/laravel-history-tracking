@@ -195,7 +195,7 @@ it('can fetch all activity for a model', function () {
 });
 
 it('can fetch soft deleted models', function () {
-    app()['config']->set('historytrack.subject_returns_soft_deleted_models', true);
+    app()['config']->set('history-tracking.subject_returns_soft_deleted_models', true);
 
     $article = $this->createArticle();
 
