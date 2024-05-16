@@ -64,6 +64,8 @@ class HistoryTrackingEvents extends Model
     /**
      * Predefined job constants - has owner
      */
+
+    CONST PREDEFINED_JOB_APPLIED = 'user_applied_to_job';
     CONST PREDEFINED_JOB_INVITED = 'user_invited_to_job';
     CONST PREDEFINED_JOB_ACCEPTED = 'user_accepted_job';
     CONST PREDEFINED_JOB_MATCHED = 'user_matched_with_company';
