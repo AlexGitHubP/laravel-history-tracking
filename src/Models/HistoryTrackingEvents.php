@@ -45,7 +45,12 @@ class HistoryTrackingEvents extends Model
      * ex: 'attended_business_advisory' => 'Person has attended business advisory service',
      */
     CONST GENERATE = [
-        self::GROUP_CUSTOM => [],
+        self::GROUP_SYSTEM => [
+
+        ],
+        self::GROUP_CUSTOM => [
+
+        ],
     ];
 
     /**
