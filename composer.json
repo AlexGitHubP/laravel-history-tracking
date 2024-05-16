@@ -56,7 +56,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "HistoryTrackingServiceProvider"
+                "Jobful\\HistoryTracking\\HistoryTrackingServiceProvider"
             ]
         }
     },
