@@ -16,7 +16,7 @@ class HistoryTrackingServiceProvider extends PackageServiceProvider
     public function configurePackage(Package $package): void
     {
         $package
-        ->name('laravel-history-tracking')
+        ->name('history-tracking')
         ->hasConfigFile('history-tracking')
         ->hasMigrations([
             'create_history_tracking_table',
