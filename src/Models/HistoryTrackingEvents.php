@@ -44,10 +44,8 @@ class HistoryTrackingEvents extends Model
      * Add key-value for each deployment if you know beforehand the custom events and run the command to generate them
      * ex: 'attended_business_advisory' => 'Person has attended business advisory service',
      */
-    CONST GENERATE_EVENTS = [
-        self::GROUP_CUSTOM => [
-
-        ],
+    CONST GENERATE = [
+        self::GROUP_CUSTOM => [],
     ];
 
     /**
@@ -79,7 +77,6 @@ class HistoryTrackingEvents extends Model
      * Predefined kanban constants - has owner
      */
     CONST PREDEFINED_KANBAN_MOVED = 'user_moved_in_kanban';
-
 
     public function customEvents(): HasMany
     {
