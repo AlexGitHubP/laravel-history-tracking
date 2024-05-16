@@ -89,4 +89,9 @@ class HistoryTrackingEvents extends Model
     {
         return $this->hasMany(HistoryTrackingCustomEvents::class, 'type');
     }
+
+    public static function findByGroup($group): HistoryTrackingEvents
+    {
+        return self::where('id', $group)->first();
+    }
 }
