@@ -13,11 +13,6 @@ class PublishHistoryTrackingModels extends Command
     public function handle()
     {
         // Define the source and destination for HistoryTrackingEvents model
-        $historySource = __DIR__ . '/Models/History.php';
-        $historyDestinationDir = app_path('Models/HistoryTracking');
-        $historyDestination = $historyDestinationDir . '/History.php';
-
-        // Define the source and destination for HistoryTrackingEvents model
         $historyTrackingEventsSource = __DIR__ . '/Models/HistoryTrackingEvents.php';
         $historyTrackingEventsDestinationDir = app_path('Models/HistoryTracking');
         $historyTrackingEventsDestination = $historyTrackingEventsDestinationDir . '/HistoryTrackingEvents.php';
@@ -28,12 +23,9 @@ class PublishHistoryTrackingModels extends Command
         $historyTrackingCustomEventsDestination = $historyTrackingCustomEventsDestinationDir . '/HistoryTrackingCustomEvents.php';
 
         // Ensure the destination directory exists
-        if (!File::exists($historyDestinationDir)) {
-            File::makeDirectory($historyDestinationDir, 0755, true);
+        if (!File::exists($historyTrackingEventsSource)) {
+            File::makeDirectory($historyTrackingEventsSource, 0755, true);
         }
-
-        // Publish History model
-        $this->publishModel($historySource, $historyDestination);
 
         // Publish HistoryTrackingEvents model
         $this->publishModel($historyTrackingEventsSource, $historyTrackingEventsDestination);
