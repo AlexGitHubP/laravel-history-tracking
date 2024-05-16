@@ -28,7 +28,8 @@ class HistoryTrackingServiceProvider extends PackageServiceProvider
         ->hasInstallCommand(function (InstallCommand $command){
             $command
                 ->publishConfigFile()
-                ->publishMigrations();
+                ->publishMigrations()
+                ->askToRunMigrations();
         });
 
 

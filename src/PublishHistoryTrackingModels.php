@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\File;
 
 class PublishHistoryTrackingModels extends Command
 {
-    protected $signature = 'laravel-historytrack:publish-models';
+    protected $signature = 'laravel-history-tracking:publish-models';
     protected $description = 'Publish history tracking models';
 
     public function handle()
