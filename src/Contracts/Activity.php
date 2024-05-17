@@ -19,7 +19,7 @@ interface Activity
 
     public function changes(): Collection;
 
-    public function scopeInType(Builder $query, ...$trackerTypes): Builder;
+//    public function scopeInType(Builder $query, ...$trackerTypes): Builder;
 
     public function scopeCausedBy(Builder $query, Model $causer): Builder;
 

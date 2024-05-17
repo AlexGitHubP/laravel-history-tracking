@@ -76,7 +76,7 @@ trait LogsActivity
 
                 // Actual logging
                 $logger = app(HistoryTracking::class)
-                    ->useTrackerType($trackerType)
+//                    ->useTrackerType($trackerType)
                     ->event($eventName)
                     ->performedOn($model)
                     ->withProperties($event->changes);
@@ -266,16 +266,16 @@ trait LogsActivity
 
         $properties['attributes'] = static::logChanges(
 
-            // if the current event is retrieved, get the model itself
-            // else get the fresh default properties from database
-            // as wouldn't be part of the saved model instance.
+        // if the current event is retrieved, get the model itself
+        // else get the fresh default properties from database
+        // as wouldn't be part of the saved model instance.
             $processingEvent == 'retrieved'
                 ? $this
                 : (
-                    $this->exists
-                        ? $this->fresh() ?? $this
-                        : $this
-                )
+            $this->exists
+                ? $this->fresh() ?? $this
+                : $this
+            )
         );
 
         if (static::eventsToBeRecorded()->contains('updated') && $processingEvent == 'updated') {

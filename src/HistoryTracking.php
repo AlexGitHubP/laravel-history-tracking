@@ -128,12 +128,12 @@ class HistoryTracking
         return $this;
     }
 
-    public function useTrackerType(?string $trackerType): static
-    {
-        $this->getActivity()->tracker_type = $trackerType;
-
-        return $this;
-    }
+//    public function useTrackerType(?string $trackerType): static
+//    {
+//        $this->getActivity()->tracker_type = $trackerType;
+//
+//        return $this;
+//    }
 
     public function ownedBy($owner = null): static
     {
@@ -156,10 +156,10 @@ class HistoryTracking
         return $this;
     }
 
-    public function inTrackerType(?string $trackerType): static
-    {
-        return $this->useTrackerType($trackerType);
-    }
+//    public function inTrackerType(?string $trackerType): static
+//    {
+////        return $this->useTrackerType($trackerType);
+//    }
 
     public function tap(callable $callback, string $eventName = null): static
     {
@@ -249,7 +249,7 @@ class HistoryTracking
         if (! $this->activity instanceof ActivityContract) {
             $this->activity = HistoryTrackingServiceProvider::getActivityModelInstance();
             $this
-                ->useTrackerType($this->defaultTrackerType)
+//                ->useTrackerType($this->defaultTrackerType)
                 ->withProperties([])
                 ->causedBy($this->causerResolver->resolve());
         }

@@ -97,14 +97,14 @@ class History extends Model implements ActivityContract
         return $this->changes();
     }
 
-    public function scopeInType(Builder $query, ...$trackerTypes): Builder
-    {
-        if (is_array($trackerTypes[0])) {
-            $trackerTypes = $trackerTypes[0];
-        }
-
-        return $query->whereIn('tracker_type', $trackerTypes);
-    }
+//    public function scopeInType(Builder $query, ...$trackerTypes): Builder
+//    {
+//        if (is_array($trackerTypes[0])) {
+//            $trackerTypes = $trackerTypes[0];
+//        }
+//
+//        return $query->whereIn('tracker_type', $trackerTypes);
+//    }
 
     public function scopeCausedBy(Builder $query, Model $causer): Builder
     {
