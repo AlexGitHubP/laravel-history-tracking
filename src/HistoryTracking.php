@@ -57,14 +57,8 @@ class HistoryTracking
         return $this->performedOn($model);
     }
 
-    public function causedBy(Model | int | string | null $modelOrId): static
+    public function causedBy(Model | int | string | null $model): static
     {
-        if ($modelOrId === null) {
-            return $this;
-        }
-
-        $model = $this->causerResolver->resolve($modelOrId);
-
         $this->getActivity()->causer()->associate($model);
 
         return $this;

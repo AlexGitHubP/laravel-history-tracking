@@ -18,25 +18,12 @@ class HistoryTrackingEvents extends Model
         'name',
     ];
 
-    CONST TYPE_AUTOMATIC = 1;
-    CONST TYPE_MANUAL = 2;
-
-    CONST GROUP_SYSTEM = 1;
-    CONST GROUP_CUSTOM = 2;
+    CONST TYPE_CUSTOM = 1;
 
     public static function type(): array
     {
         return [
-            self::TYPE_AUTOMATIC => __('Automatic'),
-            self::TYPE_MANUAL => __('Manual'),
-        ];
-    }
-
-    public static function group(): array
-    {
-        return [
-            self::GROUP_SYSTEM => __('System'),
-            self::GROUP_CUSTOM => __('Custom'),
+            self::TYPE_CUSTOM => __('Custom'),
         ];
     }
 
@@ -45,10 +32,7 @@ class HistoryTrackingEvents extends Model
      * ex: 'attended_business_advisory' => 'Person has attended business advisory service',
      */
     CONST GENERATE = [
-        self::GROUP_SYSTEM => [
-
-        ],
-        self::GROUP_CUSTOM => [
+        self::TYPE_CUSTOM => [
 
         ],
     ];
@@ -57,41 +41,31 @@ class HistoryTrackingEvents extends Model
      * Predefined system constants - has no owner
      */
     CONST PREDEFINED_SYSTEM_CREATED_ACCOUNT = 'user_created_account';
-    CONST PREDEFINED_SYSTEM_ONBOARD_COMPLETE = 'user_completed_onboarding';
-    CONST PREDEFINED_SYSTEM_UPLOADED_CV = 'user_uploaded_cv';
-    CONST PREDEFINED_SYSTEM_UPDATED_PASSWORD = 'user_updated_password';
-
+    CONST PREDEFINED_SYSTEM_PASSED_THRESHOLD = 'passed_threshold_cv';
+    CONST PREDEFINED_USER_ACCOUNTLESS_CONVERTED_TO_ACCOUNT = 'user_accountless_converted_to_account';
     /**
      * Predefined job constants - has owner
      */
 
     CONST PREDEFINED_JOB_APPLIED = 'user_applied_to_job';
     CONST PREDEFINED_JOB_INVITED = 'user_invited_to_job';
-    CONST PREDEFINED_JOB_ACCEPTED = 'user_accepted_job';
     CONST PREDEFINED_JOB_MATCHED = 'user_matched_with_company';
-    CONST PREDEFINED_JOB_REJECTED_USER = 'user_rejected_job';
-    CONST PREDEFINED_JOB_REJECTED_COMPANY = 'company_rejected_user_application';
-    CONST PREDEFINED_JOB_HIRED = 'company_hired_user';
-
-    /**
-     * Predefined courses constants - has owner
-     */
-    CONST PREDEFINED_COURSE_STARTED = 'user_started_course';
-    CONST PREDEFINED_COURSE_COMPLETED = 'user_completed_course';
-    CONST PREDEFINED_COURSES_COMPLETED = 'user_completed_all_courses';
+    CONST PREDEFINED_JOB_DECLINED_INVITATION = 'user_declined_invitation';
+    CONST PREDEFINED_JOB_COMPANY_DECLINED_APPLICATION = 'company_declined_application';
 
     /**
      * Predefined kanban constants - has owner
      */
-    CONST PREDEFINED_KANBAN_MOVED = 'user_moved_in_kanban';
+    CONST PREDEFINED_KANBAN_HIRED = 'user_hired';
+    CONST PREDEFINED_KANBAN_REJECTED = 'user_rejected';
 
     public function customEvents(): HasMany
     {
         return $this->hasMany(HistoryTrackingCustomEvents::class, 'type');
     }
 
-    public static function findByGroup($group): HistoryTrackingEvents
+    public static function findByType($type): HistoryTrackingEvents
     {
-        return self::where('id', $group)->first();
+        return self::where('id', $type)->first();
     }
 }

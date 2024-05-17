@@ -15,7 +15,6 @@ class CreateHistoryTrackingTable extends Migration
             $table->nullableMorphs('trackable', 'trackable');
             $table->integer('owner')->unsigned()->nullable()->index();
             $table->string('event')->nullable()->index();
-            $table->integer('tracker_type')->unsigned()->nullable();
             $table->json('properties')->nullable();
             $table->text('description');
             $table->dateTime('performed_at')->nullable();
