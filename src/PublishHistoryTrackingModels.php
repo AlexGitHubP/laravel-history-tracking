@@ -17,14 +17,14 @@ class PublishHistoryTrackingModels extends Command
         $historyTrackingEventsDestinationDir = app_path('Models/HistoryTracking');
         $historyTrackingEventsDestination = $historyTrackingEventsDestinationDir . '/HistoryTrackingEvents.php';
 
-        // Define the source and destination for JobfulSystem model
+        // Define the source and destination for HistoryTrackingCustomEvents model
         $historyTrackingCustomEventsSource = __DIR__ . '/Models/HistoryTrackingCustomEvents.php';
         $historyTrackingCustomEventsDestinationDir = app_path('Models/HistoryTracking');
         $historyTrackingCustomEventsDestination = $historyTrackingCustomEventsDestinationDir . '/HistoryTrackingCustomEvents.php';
 
         // Ensure the destination directory exists
-        if (!File::exists($historyTrackingEventsSource)) {
-            File::makeDirectory($historyTrackingEventsSource, 0755, true);
+        if (!File::exists($historyTrackingEventsDestinationDir)) {
+            File::makeDirectory($historyTrackingEventsDestinationDir, 0755, true);
         }
 
         // Publish HistoryTrackingEvents model
@@ -33,7 +33,7 @@ class PublishHistoryTrackingModels extends Command
         // Publish HistoryTrackingCustomEvents model
         $this->publishModel($historyTrackingCustomEventsSource, $historyTrackingCustomEventsDestination);
 
-        $this->info('History tracking modules published and namespaces updated.');
+        $this->info('History tracking models published and namespaces updated.');
     }
 
     protected function publishModel($source, $destination)
